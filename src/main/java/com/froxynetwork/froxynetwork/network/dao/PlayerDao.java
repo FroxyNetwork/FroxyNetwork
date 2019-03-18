@@ -33,6 +33,13 @@ import retrofit2.http.Path;
  */
 public interface PlayerDao {
 
+	/**
+	 * Get a player from his UUID or his name
+	 * 
+	 * @param uuid
+	 *            The uuid of the player, or his name
+	 * @return Specific player if exists
+	 */
 	@GET("player/{uuid}")
 	public Call<PlayerDataOutput> getPlayer(@Path("uuid") String uuid);
 }

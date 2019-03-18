@@ -1,5 +1,7 @@
 package com.froxynetwork.froxynetwork;
 
+import java.io.IOException;
+
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput.Player;
 import com.froxynetwork.froxynetwork.network.output.RestException;
@@ -53,6 +55,12 @@ public class App {
 			@Override
 			public void onResponse(Player response) {
 				System.out.println("ASYNC response: " + response);
+				try {
+					System.out.println(serviceManager.getPlayerService().syncGetPlayer("1ddlyoko"));
+				} catch (RestException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
 			@Override
@@ -67,7 +75,8 @@ public class App {
 			}
 		});
 		System.out.println("SENDING SYNC GET PLAYER");
-		Player response = serviceManager.getPlayerService().syncGetPlayer("0ddlyoko");
+		// Should generate RestException
+		Player response = serviceManager.getPlayerService().syncGetPlayer("2ddlyoko");
 		System.out.println("SYNC response: " + response);
 	}
 
