@@ -34,7 +34,7 @@ public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player>
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public class Player {
+	public static class Player {
 		private String uuid;
 		private String pseudo;
 		private String displayName;

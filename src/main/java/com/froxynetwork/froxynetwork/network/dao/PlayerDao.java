@@ -1,9 +1,13 @@
 package com.froxynetwork.froxynetwork.network.dao;
 
 import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput;
+import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput.Player;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
@@ -37,9 +41,19 @@ public interface PlayerDao {
 	 * Get a player from his UUID or his name
 	 * 
 	 * @param uuid
-	 *            The uuid of the player, or his name
+	 *			The uuid of the player, or his name
 	 * @return Specific player if exists
 	 */
 	@GET("player/{uuid}")
 	public Call<PlayerDataOutput> getPlayer(@Path("uuid") String uuid);
+
+	/**
+	 * Register a new player to the REST service
+	 * 
+	 * @param player The player
+	 * @return The response
+	 */
+	@Headers("Content-Type: application/json")
+	@POST("player")
+	public Call<PlayerDataOutput> createPlayer(@Body Player player);
 }

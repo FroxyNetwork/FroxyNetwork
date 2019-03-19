@@ -1,17 +1,15 @@
 package com.froxynetwork.froxynetwork.network.service;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import com.froxynetwork.froxynetwork.App;
 import com.froxynetwork.froxynetwork.network.dao.PlayerDao;
 import com.froxynetwork.froxynetwork.network.output.Callback;
-import com.froxynetwork.froxynetwork.network.output.GeneralDataOutput;
 import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput;
 import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput.Player;
 import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.google.gson.Gson;
 
-import retrofit2.Call;
 import retrofit2.Response;
 
 /**
@@ -48,53 +46,28 @@ public class PlayerService {
 	}
 
 	public void asyncGetPlayer(String uuid, Callback<Player> callback) {
-		playerDao.getPlayer(uuid).enqueue(callback(callback, PlayerDataOutput.class));
+		playerDao.getPlayer(uuid).enqueue(ServiceHelper.callback(callback, PlayerDataOutput.class));
 	}
 
 	public Player syncGetPlayer(String uuid) throws RestException, IOException {
 		Response<PlayerDataOutput> response = playerDao.getPlayer(uuid).execute();
-		PlayerDataOutput body = response(response, PlayerDataOutput.class);
+		PlayerDataOutput body = ServiceHelper.response(response, PlayerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
 		else
 			return body.getData();
 	}
 
-	private <T extends GeneralDataOutput<U>, U> retrofit2.Callback<T> callback(Callback<U> callback, Class<T> clazz) {
-		return new retrofit2.Callback<T>() {
-
-			@Override
-			public void onResponse(Call<T> call, Response<T> response) {
-				T body;
-				try {
-					body = response(response, clazz);
-				} catch (IOException ex) {
-					onFailure(call, ex);
-					return;
-				}
-				if (body.isError())
-					// (Normally) impossible
-					callback.onFailure(new RestException(body));
-				else
-					callback.onResponse(body.getData());
-			}
-
-			@Override
-			public void onFailure(Call<T> call, Throwable t) {
-				callback.onFatalFailure(t);
-			}
-		};
+	public void asyncAddPlayer(UUID uuid, String pseudo, String ip, Callback<Player> callback) {
+		playerDao.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null)).enqueue(ServiceHelper.callback(callback, PlayerDataOutput.class));
 	}
 
-	private <T extends GeneralDataOutput<U>, U> T response(Response<T> response, Class<T> clazz) throws IOException {
-		T body = null;
-		if (response.isSuccessful()) {
-			// OK
-			body = response.body();
-		} else {
-			String json = response.errorBody().string();
-			body = new Gson().fromJson(json, clazz);
-		}
-		return body;
+	public Player syncAddPlayer(UUID uuid, String pseudo, String ip) throws RestException, IOException {
+		Response<PlayerDataOutput> response = playerDao.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null)).execute();
+		PlayerDataOutput body = ServiceHelper.response(response, PlayerDataOutput.class);
+		if (body.isError())
+			throw new RestException(body);
+		else
+			return body.getData();
 	}
 }
