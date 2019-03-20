@@ -1,9 +1,8 @@
-package com.froxynetwork.froxynetwork.network.output;
+package com.froxynetwork.froxynetwork.network.output.data;
 
-import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
-
-import lombok.Getter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * MIT License
@@ -30,12 +29,21 @@ import lombok.ToString;
  * 
  * @author 0ddlyoko
  */
-public class RestException extends Exception {
-	private static final long serialVersionUID = -7510218546405650814L;
-	@Getter
-	private GeneralDataOutput<?> error;
+public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
 
-	public RestException(GeneralDataOutput<?> output) {
-		error = output;
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class Player {
+		private String uuid;
+		private String pseudo;
+		private String displayName;
+		private int coins;
+		private int level;
+		private int exp;
+		private String firstLogin;
+		private String lastLogin;
+		private String ip;
+		private String lang;
 	}
 }

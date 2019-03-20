@@ -6,9 +6,9 @@ import java.util.UUID;
 import com.froxynetwork.froxynetwork.App;
 import com.froxynetwork.froxynetwork.network.dao.PlayerDao;
 import com.froxynetwork.froxynetwork.network.output.Callback;
-import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput;
-import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput.Player;
 import com.froxynetwork.froxynetwork.network.output.RestException;
+import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput.Player;
 
 import retrofit2.Response;
 

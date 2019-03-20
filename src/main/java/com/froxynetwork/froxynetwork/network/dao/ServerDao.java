@@ -36,7 +36,7 @@ import retrofit2.http.Path;
  * 
  * @author 0ddlyoko
  */
-public interface PlayerDao {
+public interface ServerDao {
 
 	/**
 	 * Get a player from his UUID or his name
@@ -44,8 +44,8 @@ public interface PlayerDao {
 	 * @param uuid The uuid of the player, or his name
 	 * @return Specific player if exists
 	 */
-	@GET("player/{uuid}")
-	public Call<PlayerDataOutput> getPlayer(@Path("uuid") String uuid);
+	@GET("server/{id}")
+	public Call<PlayerDataOutput> getServer(@Path("uuid") String uuid);
 
 	/**
 	 * Register a new player to the REST service

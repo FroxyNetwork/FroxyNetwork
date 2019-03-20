@@ -3,8 +3,8 @@ package com.froxynetwork.froxynetwork.network.service;
 import java.io.IOException;
 
 import com.froxynetwork.froxynetwork.network.output.Callback;
-import com.froxynetwork.froxynetwork.network.output.GeneralDataOutput;
 import com.froxynetwork.froxynetwork.network.output.RestException;
+import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
