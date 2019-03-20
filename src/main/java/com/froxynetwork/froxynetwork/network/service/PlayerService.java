@@ -70,4 +70,17 @@ public class PlayerService {
 		else
 			return body.getData();
 	}
+
+	public void asyncEditPlayer(Player player, Callback<Player> callback) {
+		playerDao.updatePlayer(player.getUuid(), player).enqueue(ServiceHelper.callback(callback, PlayerDataOutput.class));
+	}
+
+	public Player syncEditPlayer(Player player) throws RestException, IOException {
+		Response<PlayerDataOutput> response = playerDao.updatePlayer(player.getUuid(), player).execute();
+		PlayerDataOutput body = ServiceHelper.response(response, PlayerDataOutput.class);
+		if (body.isError())
+			throw new RestException(body);
+		else
+			return body.getData();
+	}
 }

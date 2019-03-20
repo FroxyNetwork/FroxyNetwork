@@ -8,6 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 /**
@@ -40,8 +41,7 @@ public interface PlayerDao {
 	/**
 	 * Get a player from his UUID or his name
 	 * 
-	 * @param uuid
-	 *			The uuid of the player, or his name
+	 * @param uuid The uuid of the player, or his name
 	 * @return Specific player if exists
 	 */
 	@GET("player/{uuid}")
@@ -56,4 +56,15 @@ public interface PlayerDao {
 	@Headers("Content-Type: application/json")
 	@POST("player")
 	public Call<PlayerDataOutput> createPlayer(@Body Player player);
+
+    /**
+     * Edit an existing player to the REST service
+     * 
+     * @param uuid The UUID of the player
+     * @param player The player
+     * @return
+     */
+    @Headers("Content-Type: application/json")
+    @PUT("player/{uuid}")
+    public Call<PlayerDataOutput> updatePlayer(@Path("uuid") String uuid, @Body Player player);
 }
