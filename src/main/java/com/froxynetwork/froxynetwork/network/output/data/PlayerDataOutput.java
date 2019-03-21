@@ -1,6 +1,8 @@
-package com.froxynetwork.froxynetwork.network.service;
+package com.froxynetwork.froxynetwork.network.output.data;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * MIT License
@@ -27,16 +29,21 @@ import lombok.Getter;
  * 
  * @author 0ddlyoko
  */
-public final class ServiceManager {
+public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
 
-	@Getter
-	private PlayerService playerService;
-
-	@Getter
-	private ServerService serverService;
-
-	public ServiceManager() {
-		playerService = new PlayerService();
-		serverService = new ServerService();
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class Player {
+		private String uuid;
+		private String pseudo;
+		private String displayName;
+		private int coins;
+		private int level;
+		private int exp;
+		private String firstLogin;
+		private String lastLogin;
+		private String ip;
+		private String lang;
 	}
 }

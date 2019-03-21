@@ -1,4 +1,4 @@
-package com.froxynetwork.froxynetwork.network.output;
+package com.froxynetwork.froxynetwork.network.output.data;
 
 import com.google.gson.annotations.SerializedName;
 

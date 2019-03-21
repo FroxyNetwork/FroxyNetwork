@@ -3,8 +3,8 @@ package com.froxynetwork.froxynetwork;
 import java.io.IOException;
 
 import com.froxynetwork.froxynetwork.network.output.Callback;
-import com.froxynetwork.froxynetwork.network.output.PlayerDataOutput.Player;
 import com.froxynetwork.froxynetwork.network.output.RestException;
+import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput.Player;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
 
 import lombok.Getter;

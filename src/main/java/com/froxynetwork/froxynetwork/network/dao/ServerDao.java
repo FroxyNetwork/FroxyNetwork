@@ -1,10 +1,12 @@
 package com.froxynetwork.froxynetwork.network.dao;
 
-import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput.Player;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -36,35 +38,51 @@ import retrofit2.http.Path;
  * 
  * @author 0ddlyoko
  */
-public interface PlayerDao {
+public interface ServerDao {
 
 	/**
-	 * Get a player from his UUID or his name
+	 * Get a server from his id
 	 * 
-	 * @param uuid The uuid of the player, or his name
-	 * @return Specific player if exists
+	 * @param id The id of the server
+	 * @return Specific server if exists
 	 */
-	@GET("player/{uuid}")
-	public Call<PlayerDataOutput> getPlayer(@Path("uuid") String uuid);
+	@GET("server/{id}")
+	public Call<ServerDataOutput> getServer(@Path("id") int id);
 
 	/**
-	 * Register a new player to the REST service
+	 * Get all server connected
+	 * @return a list of all server connected
+	 */
+	@GET("server")
+	public Call<ServerListDataOutput> getServers();
+
+	/**
+	 * Register a new server to the REST service
 	 * 
-	 * @param player The player
+	 * @param server The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("player")
-	public Call<PlayerDataOutput> createPlayer(@Body Player player);
+	@POST("server")
+	public Call<ServerDataOutput> createServer(@Body Server server);
 
-    /**
-     * Edit an existing player to the REST service
-     * 
-     * @param uuid The UUID of the player
-     * @param player The player
-     * @return The response
-     */
-    @Headers("Content-Type: application/json")
-    @PUT("player/{uuid}")
-    public Call<PlayerDataOutput> updatePlayer(@Path("uuid") String uuid, @Body Player player);
+	/**
+	 * Edit an existing server to the REST service
+	 * 
+	 * @param id The id of the server
+	 * @param server The server
+	 * @return The response
+	 */
+	@Headers("Content-Type: application/json")
+	@PUT("server/{id}")
+	public Call<ServerDataOutput> updateServer(@Path("id") int id, @Body Server server);
+
+	/**
+	 * Delete (close) an existing server to the REST service
+	 * 
+	 * @param id The id of the server
+	 * @return The response
+	 */
+	@DELETE("server/{id}")
+	public Call<ServerDataOutput> deleteServer(@Path("id") int id);
 }

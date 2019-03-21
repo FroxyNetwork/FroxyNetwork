@@ -1,4 +1,8 @@
-package com.froxynetwork.froxynetwork.network.output;
+package com.froxynetwork.froxynetwork.network.output.data.server;
+
+import java.util.List;
+
+import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,21 +33,13 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+public class ServerListDataOutput extends GeneralDataOutput<ServerListDataOutput.ServerList> {
 
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String pseudo;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private String firstLogin;
-		private String lastLogin;
-		private String ip;
-		private String lang;
+	public static class ServerList {
+		private int size;
+		private List<ServerDataOutput.Server> servers;
 	}
 }

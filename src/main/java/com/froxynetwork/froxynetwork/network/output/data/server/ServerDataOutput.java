@@ -1,6 +1,12 @@
-package com.froxynetwork.froxynetwork.network.service;
+package com.froxynetwork.froxynetwork.network.output.data.server;
 
-import lombok.Getter;
+import java.util.Date;
+
+import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * MIT License
@@ -27,16 +33,36 @@ import lombok.Getter;
  * 
  * @author 0ddlyoko
  */
-public final class ServiceManager {
-
-	@Getter
-	private PlayerService playerService;
-
-	@Getter
-	private ServerService serverService;
-
-	public ServiceManager() {
-		playerService = new PlayerService();
-		serverService = new ServerService();
+public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server> {
+	
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class Server {
+		private int id;
+		private String name;
+		private int port;
+		private String status;
+		private Date creationTime;
+	}
+	
+	public enum ServerStatus {
+		STARTING,
+		WAITING,
+		STARTED,
+		ENDING,
+		ENDED;
+		
+		/**
+		 * Check if b is after or equals to a
+		 * 
+		 * @param a The first status
+		 * @param b The second status
+		 * 
+		 * @return true if b is after or equals to a
+		 */
+		public static boolean isAfter(ServerStatus a, ServerStatus b) {
+			return b.ordinal() >= a.ordinal();
+		}
 	}
 }
