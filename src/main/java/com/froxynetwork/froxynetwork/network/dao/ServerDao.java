@@ -1,10 +1,12 @@
 package com.froxynetwork.froxynetwork.network.dao;
 
-import com.froxynetwork.froxynetwork.network.output.data.ServerDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.ServerDataOutput.Server;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -48,6 +50,13 @@ public interface ServerDao {
 	public Call<ServerDataOutput> getServer(@Path("id") int id);
 
 	/**
+	 * Get all server connected
+	 * @return a list of all server connected
+	 */
+	@GET("server")
+	public Call<ServerListDataOutput> getServers();
+
+	/**
 	 * Register a new server to the REST service
 	 * 
 	 * @param server The server
@@ -74,6 +83,6 @@ public interface ServerDao {
 	 * @param id The id of the server
 	 * @return The response
 	 */
-	@PUT("server/{id}")
+	@DELETE("server/{id}")
 	public Call<ServerDataOutput> deleteServer(@Path("id") int id);
 }

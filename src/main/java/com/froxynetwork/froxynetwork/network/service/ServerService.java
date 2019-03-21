@@ -6,8 +6,10 @@ import com.froxynetwork.froxynetwork.App;
 import com.froxynetwork.froxynetwork.network.dao.ServerDao;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.froxynetwork.froxynetwork.network.output.data.ServerDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.ServerDataOutput.Server;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput.ServerList;
 
 import retrofit2.Response;
 
@@ -51,6 +53,19 @@ public class ServerService {
 	public Server syncGetServer(int id) throws RestException, IOException {
 		Response<ServerDataOutput> response = serverDao.getServer(id).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
+		if (body.isError())
+			throw new RestException(body);
+		else
+			return body.getData();
+	}
+
+	public void asyncGetServers(Callback<ServerList> callback) {
+		serverDao.getServers().enqueue(ServiceHelper.callback(callback, ServerListDataOutput.class));
+	}
+
+	public ServerList syncGetServers() throws RestException, IOException {
+		Response<ServerListDataOutput> response = serverDao.getServers().execute();
+		ServerListDataOutput body = ServiceHelper.response(response, ServerListDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
 		else

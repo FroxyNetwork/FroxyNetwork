@@ -1,6 +1,8 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.output.data.server;
 
-import java.util.Date;
+import java.util.List;
+
+import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,36 +33,13 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server> {
-	
+public class ServerListDataOutput extends GeneralDataOutput<ServerListDataOutput.ServerList> {
+
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class Server {
-		private int id;
-		private String name;
-		private int port;
-		private String status;
-		private Date creationTime;
-	}
-	
-	public enum ServerStatus {
-		STARTING,
-		WAITING,
-		STARTED,
-		ENDING,
-		ENDED;
-		
-		/**
-		 * Check if b is after or equals to a
-		 * 
-		 * @param a The first status
-		 * @param b The second status
-		 * 
-		 * @return true if b is after or equals to a
-		 */
-		public static boolean isAfter(ServerStatus a, ServerStatus b) {
-			return b.ordinal() >= a.ordinal();
-		}
+	public static class ServerList {
+		private int size;
+		private List<ServerDataOutput.Server> servers;
 	}
 }
