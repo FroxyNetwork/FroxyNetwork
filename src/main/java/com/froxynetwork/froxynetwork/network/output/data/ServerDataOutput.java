@@ -44,7 +44,7 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private Date creationTime;
 	}
 	
-	public static enum ServerStatus {
+	public enum ServerStatus {
 		STARTING,
 		WAITING,
 		STARTED,

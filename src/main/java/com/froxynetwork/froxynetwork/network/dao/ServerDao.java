@@ -1,7 +1,7 @@
 package com.froxynetwork.froxynetwork.network.dao;
 
-import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput.Player;
+import com.froxynetwork.froxynetwork.network.output.data.ServerDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.ServerDataOutput.Server;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -39,32 +39,41 @@ import retrofit2.http.Path;
 public interface ServerDao {
 
 	/**
-	 * Get a player from his UUID or his name
+	 * Get a server from his id
 	 * 
-	 * @param uuid The uuid of the player, or his name
-	 * @return Specific player if exists
+	 * @param id The id of the server
+	 * @return Specific server if exists
 	 */
 	@GET("server/{id}")
-	public Call<PlayerDataOutput> getServer(@Path("uuid") String uuid);
+	public Call<ServerDataOutput> getServer(@Path("id") int id);
 
 	/**
-	 * Register a new player to the REST service
+	 * Register a new server to the REST service
 	 * 
-	 * @param player The player
+	 * @param server The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
-	@POST("player")
-	public Call<PlayerDataOutput> createPlayer(@Body Player player);
+	@POST("server")
+	public Call<ServerDataOutput> createServer(@Body Server server);
 
-    /**
-     * Edit an existing player to the REST service
-     * 
-     * @param uuid The UUID of the player
-     * @param player The player
-     * @return
-     */
-    @Headers("Content-Type: application/json")
-    @PUT("player/{uuid}")
-    public Call<PlayerDataOutput> updatePlayer(@Path("uuid") String uuid, @Body Player player);
+	/**
+	 * Edit an existing server to the REST service
+	 * 
+	 * @param id The id of the server
+	 * @param server The server
+	 * @return The response
+	 */
+	@Headers("Content-Type: application/json")
+	@PUT("server/{id}")
+	public Call<ServerDataOutput> updateServer(@Path("id") int id, @Body Server server);
+
+	/**
+	 * Delete (close) an existing server to the REST service
+	 * 
+	 * @param id The id of the server
+	 * @return The response
+	 */
+	@PUT("server/{id}")
+	public Call<ServerDataOutput> deleteServer(@Path("id") int id);
 }

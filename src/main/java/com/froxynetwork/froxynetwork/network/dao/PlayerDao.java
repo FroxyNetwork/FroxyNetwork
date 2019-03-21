@@ -62,7 +62,7 @@ public interface PlayerDao {
      * 
      * @param uuid The UUID of the player
      * @param player The player
-     * @return
+     * @return The response
      */
     @Headers("Content-Type: application/json")
     @PUT("player/{uuid}")
