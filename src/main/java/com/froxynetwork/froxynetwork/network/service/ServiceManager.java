@@ -32,7 +32,11 @@ public final class ServiceManager {
 	@Getter
 	private PlayerService playerService;
 
+	@Getter
+	private ServerService serverService;
+
 	public ServiceManager() {
 		playerService = new PlayerService();
+		serverService = new ServerService();
 	}
 }
