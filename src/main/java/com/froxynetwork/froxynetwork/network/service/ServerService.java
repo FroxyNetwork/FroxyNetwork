@@ -2,6 +2,9 @@ package com.froxynetwork.froxynetwork.network.service;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.froxynetwork.froxynetwork.App;
 import com.froxynetwork.froxynetwork.network.dao.ServerDao;
 import com.froxynetwork.froxynetwork.network.output.Callback;
@@ -40,6 +43,8 @@ import retrofit2.Response;
  */
 public class ServerService {
 
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
+
 	private ServerDao serverDao;
 
 	public ServerService() {
@@ -47,10 +52,14 @@ public class ServerService {
 	}
 
 	public void asyncGetServer(int id, Callback<Server> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncGetServer: Retrieving server {}", id);
 		serverDao.getServer(id).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
 	public Server syncGetServer(int id) throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("syncGetServer: Retrieving server {}", id);
 		Response<ServerDataOutput> response = serverDao.getServer(id).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
@@ -60,10 +69,14 @@ public class ServerService {
 	}
 
 	public void asyncGetServers(Callback<ServerList> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncGetServers: Retrieving all servers");
 		serverDao.getServers().enqueue(ServiceHelper.callback(callback, ServerListDataOutput.class));
 	}
 
 	public ServerList syncGetServers() throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("syncGetServers: Retrieving all servers");
 		Response<ServerListDataOutput> response = serverDao.getServers().execute();
 		ServerListDataOutput body = ServiceHelper.response(response, ServerListDataOutput.class);
 		if (body.isError())
@@ -73,10 +86,14 @@ public class ServerService {
 	}
 
 	public void asyncAddServer(String name, int port, Callback<Server> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncAddServer: Adding new server, name = {}, port = {}", name, port);
 		serverDao.createServer(new Server(0, name, port, null, null)).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
 	public Server syncAddServer(String name, int port) throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("syncAddServer: Adding new server, name = {}, port = {}", name, port);
 		Response<ServerDataOutput> response = serverDao.createServer(new Server(0, name, port, null, null)).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
@@ -86,10 +103,14 @@ public class ServerService {
 	}
 
 	public void asyncEditServer(Server server, Callback<Server> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncEditServer: Editing Server {} ({}), new status = {}", server.getName(), server.getId(), server.getStatus());
 		serverDao.updateServer(server.getId(), server).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
 	public Server syncEditServer(Server server) throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("syncEditServer: Editing Server {} ({}), new status = {}", server.getName(), server.getId(), server.getStatus());
 		Response<ServerDataOutput> response = serverDao.updateServer(server.getId(), server).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
@@ -99,10 +120,14 @@ public class ServerService {
 	}
 
 	public void asyncDeleteServer(int id, Callback<Server> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncDeleteServer: Deleting Server {}", id);
 		serverDao.deleteServer(id).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
 	public Server syncDeleteServer(int id) throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("syncDeleteServer: Deleting Server {}", id);
 		Response<ServerDataOutput> response = serverDao.deleteServer(id).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())

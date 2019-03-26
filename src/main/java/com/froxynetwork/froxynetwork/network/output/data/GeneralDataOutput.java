@@ -1,5 +1,6 @@
 package com.froxynetwork.froxynetwork.network.output.data;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import lombok.Data;
@@ -31,13 +32,17 @@ import lombok.Data;
  */
 @Data
 public class GeneralDataOutput<T> {
-    
-    private boolean error;
-    
-    private int code;
-    
-    @SerializedName("error_message")
-    private String errorMessage;
-    
-    private T data;
+
+	private boolean error;
+
+	private int code;
+
+	@SerializedName("error_message")
+	private String errorMessage;
+
+	private T data;
+
+	public String toJson() {
+		return new Gson().toJson(this);
+	}
 }

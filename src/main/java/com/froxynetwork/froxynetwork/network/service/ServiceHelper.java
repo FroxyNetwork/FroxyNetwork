@@ -2,6 +2,9 @@ package com.froxynetwork.froxynetwork.network.service;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
 import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
@@ -36,9 +39,10 @@ import retrofit2.Response;
  * @author 0ddlyoko
  */
 public final class ServiceHelper {
-	
+
+	private static final Logger LOG = LoggerFactory.getLogger(ServiceHelper.class);
+
 	private ServiceHelper() {
-		
 	}
 
 	protected static <T extends GeneralDataOutput<U>, U> retrofit2.Callback<T> callback(Callback<U> callback, Class<T> clazz) {
@@ -76,6 +80,8 @@ public final class ServiceHelper {
 			String json = response.errorBody().string();
 			body = new Gson().fromJson(json, clazz);
 		}
+		if (LOG.isDebugEnabled())
+			LOG.debug("Got code {}, body = {}", response.code(), body.toJson());
 		return body;
 	}
 }

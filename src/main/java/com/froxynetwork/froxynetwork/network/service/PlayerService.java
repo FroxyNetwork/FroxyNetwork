@@ -3,6 +3,9 @@ package com.froxynetwork.froxynetwork.network.service;
 import java.io.IOException;
 import java.util.UUID;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.froxynetwork.froxynetwork.App;
 import com.froxynetwork.froxynetwork.network.dao.PlayerDao;
 import com.froxynetwork.froxynetwork.network.output.Callback;
@@ -39,6 +42,8 @@ import retrofit2.Response;
  */
 public class PlayerService {
 
+	private final Logger LOG = LoggerFactory.getLogger(getClass());
+
 	private PlayerDao playerDao;
 
 	public PlayerService() {
@@ -46,10 +51,14 @@ public class PlayerService {
 	}
 
 	public void asyncGetPlayer(String uuid, Callback<Player> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncGetPlayer: Retrieving player {}", uuid);
 		playerDao.getPlayer(uuid).enqueue(ServiceHelper.callback(callback, PlayerDataOutput.class));
 	}
 
 	public Player syncGetPlayer(String uuid) throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("syncGetPlayer: Retrieving player {}", uuid);
 		Response<PlayerDataOutput> response = playerDao.getPlayer(uuid).execute();
 		PlayerDataOutput body = ServiceHelper.response(response, PlayerDataOutput.class);
 		if (body.isError())
@@ -59,10 +68,14 @@ public class PlayerService {
 	}
 
 	public void asyncAddPlayer(UUID uuid, String pseudo, String ip, Callback<Player> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncAddPlayer: Adding new player, uuid = {}, pseudo = {}, ip = {}", uuid, pseudo, ip);
 		playerDao.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null)).enqueue(ServiceHelper.callback(callback, PlayerDataOutput.class));
 	}
 
 	public Player syncAddPlayer(UUID uuid, String pseudo, String ip) throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncAddPlayer: Adding new player, uuid = {}, pseudo = {}, ip = {}", uuid, pseudo, ip);
 		Response<PlayerDataOutput> response = playerDao.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null)).execute();
 		PlayerDataOutput body = ServiceHelper.response(response, PlayerDataOutput.class);
 		if (body.isError())
@@ -72,10 +85,14 @@ public class PlayerService {
 	}
 
 	public void asyncEditPlayer(Player player, Callback<Player> callback) {
+		if (LOG.isInfoEnabled())
+			LOG.info("asyncEditPlayer: Editing Player {}", player.getUuid());
 		playerDao.updatePlayer(player.getUuid(), player).enqueue(ServiceHelper.callback(callback, PlayerDataOutput.class));
 	}
 
 	public Player syncEditPlayer(Player player) throws RestException, IOException {
+		if (LOG.isInfoEnabled())
+			LOG.info("syncEditPlayer: Editing Player {}", player.getUuid());
 		Response<PlayerDataOutput> response = playerDao.updatePlayer(player.getUuid(), player).execute();
 		PlayerDataOutput body = ServiceHelper.response(response, PlayerDataOutput.class);
 		if (body.isError())
