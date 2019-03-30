@@ -36,6 +36,7 @@ public class RestException extends Exception {
 	private GeneralDataOutput<?> error;
 
 	public RestException(GeneralDataOutput<?> output) {
+		super(output.getErrorMessage());
 		error = output;
 	}
 }
