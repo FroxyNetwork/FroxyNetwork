@@ -1,13 +1,15 @@
 package com.froxynetwork.froxynetwork;
 
-import java.io.IOException;
-
+import com.froxynetwork.froxynetwork.network.interceptor.AuthenticationInterceptor;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.froxynetwork.froxynetwork.network.output.data.PlayerDataOutput.Player;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
+import com.google.gson.GsonBuilder;
 
 import lombok.Getter;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -47,37 +49,83 @@ public class App {
 	public App() throws Exception {
 		instance = this;
 		// TODO URL in config file
-		retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
-				.baseUrl("http://localhost/").build();
+		String clientId = "WEBSOCKET_045cfff18fe0ab8393178e7b7826f227";
+		String clientSecret = "SECRET_ecfdc21a8d5022e2db64b1315b087aaf";
+		OkHttpClient okHttpClient = new OkHttpClient.Builder()
+				.addInterceptor(new AuthenticationInterceptor(Credentials.basic(clientId, clientSecret))).build();
+		retrofit = new Retrofit.Builder()
+				.addConverterFactory(
+						GsonConverterFactory.create(new GsonBuilder().setDateFormat("yyyy-MM-dd hh:mm:ss").create()))
+				.client(okHttpClient).baseUrl("http://localhost/").build();
 		serviceManager = new ServiceManager();
-		System.out.println("SENDING ASYNC GET PLAYER");
-		serviceManager.getPlayerService().asyncGetPlayer("0ddlyoko", new Callback<Player>() {
+		// System.out.println("SENDING ASYNC GET PLAYER");
+		// serviceManager.getPlayerService().asyncGetPlayer("0ddlyoko", new
+		// Callback<Player>() {
+		// @Override
+		// public void onResponse(Player response) {
+		// System.out.println("ASYNC response: " + response);
+		// try {
+		// System.out.println(serviceManager.getPlayerService().syncGetPlayer("1ddlyoko"));
+		// } catch (RestException | IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+		// }
+		//
+		// @Override
+		// public void onFailure(RestException ex) {
+		// System.out
+		// .println("Error: " + ex.getError().getCode() + ", message: " +
+		// ex.getError().getErrorMessage());
+		// }
+		//
+		// @Override
+		// public void onFatalFailure(Throwable t) {
+		// System.out.println("Error: " + t);
+		// }
+		// });
+		// System.out.println("SENDING SYNC GET PLAYER");
+		// // Should generate RestException
+		// try {
+		// Player response =
+		// serviceManager.getPlayerService().syncGetPlayer("2ddlyoko");
+		// } catch (RestException ex) {
+		// ex.printStackTrace();
+		// }
+		System.out.println("Async getting server");
+		serviceManager.getServerService().asyncGetServer(43, new Callback<Server>() {
+
 			@Override
-			public void onResponse(Player response) {
-				System.out.println("ASYNC response: " + response);
-				try {
-					System.out.println(serviceManager.getPlayerService().syncGetPlayer("1ddlyoko"));
-				} catch (RestException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+			public void onResponse(Server response) {
+				System.out.println(response);
+			};
 
 			@Override
 			public void onFailure(RestException ex) {
-				System.out
-						.println("Error: " + ex.getError().getCode() + ", message: " + ex.getError().getErrorMessage());
+				ex.printStackTrace();
 			}
 
 			@Override
 			public void onFatalFailure(Throwable t) {
-				System.out.println("Error: " + t);
+				t.printStackTrace();
 			}
 		});
-		System.out.println("SENDING SYNC GET PLAYER");
-		// Should generate RestException
-		Player response = serviceManager.getPlayerService().syncGetPlayer("2ddlyoko");
-		System.out.println("SYNC response: " + response);
+		serviceManager.getServerService().asyncAddServer("koth_1", 20001, new Callback<Server>() {
+			@Override
+			public void onResponse(Server response) {
+				System.out.println(response);
+			};
+
+			@Override
+			public void onFailure(RestException ex) {
+				ex.printStackTrace();
+			}
+
+			@Override
+			public void onFatalFailure(Throwable t) {
+				t.printStackTrace();
+			}
+		});
 	}
 
 	public static void main(String[] args) throws Exception {
