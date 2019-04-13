@@ -97,22 +97,22 @@ public class App {
 
 			@Override
 			public void onResponse(Server response) {
-				System.out.println(response);
-			};
+				serviceManager.getServerService().asyncAddServer("koth_1", 20001, new Callback<Server>() {
+					@Override
+					public void onResponse(Server response) {
+						System.out.println(response);
+					};
 
-			@Override
-			public void onFailure(RestException ex) {
-				ex.printStackTrace();
-			}
+					@Override
+					public void onFailure(RestException ex) {
+						ex.printStackTrace();
+					}
 
-			@Override
-			public void onFatalFailure(Throwable t) {
-				t.printStackTrace();
-			}
-		});
-		serviceManager.getServerService().asyncAddServer("koth_1", 20001, new Callback<Server>() {
-			@Override
-			public void onResponse(Server response) {
+					@Override
+					public void onFatalFailure(Throwable t) {
+						t.printStackTrace();
+					}
+				});
 				System.out.println(response);
 			};
 

@@ -72,7 +72,6 @@ public class AuthenticationInterceptor implements Interceptor {
 
 					@Override
 					public Response intercept(Chain chain) throws IOException {
-						System.out.println("AH: " + chain.request().url().encodedPassword());
 						return chain.proceed(
 								chain.request().newBuilder().header("Authorization", clientCredential).build());
 					}
@@ -93,8 +92,7 @@ public class AuthenticationInterceptor implements Interceptor {
 		Request original = chain.request();
 
 		Request.Builder builder = original.newBuilder().header("Authorization", "Bearer " + token);
-		chain.proceed(builder.build());
-		return null;
+		return chain.proceed(builder.build());
 	}
 
 	private void askNewToken() {
@@ -111,13 +109,16 @@ public class AuthenticationInterceptor implements Interceptor {
 				}
 				token = body.getAccess_token();
 				int time = body.getExpires_in();
+				int marge = (time * 3) / 4;
 				GregorianCalendar cal = new GregorianCalendar();
 				// 3 / 4 of time
-				cal.add(Calendar.SECOND, (time * 3) / 4);
+				cal.add(Calendar.SECOND, marge);
 				expirationDate = cal.getTime();
-				if (LOG.isInfoEnabled())
-					LOG.info("Authentication token done, expire in {} seconds ({})", time,
-							new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+				if (LOG.isInfoEnabled()) {
+					SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					LOG.info("Authentication token done, expire in {} seconds, marge = {} seconds ({})", time, marge,
+							format.format(cal.getTime()));
+				}
 				return;
 			} catch (IOException ex) {
 				LOG.error("Error while askip new token: ", ex);

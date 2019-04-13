@@ -42,7 +42,6 @@ public interface OAuth2Dao {
 	 *            The player
 	 * @return The response
 	 */
-	@Headers("Content-Type: application/json")
 	@POST("oauth2")
 	@FormUrlEncoded
 	public Call<OAuth2> askToken(@Field("grant_type") String clientCredentials);
