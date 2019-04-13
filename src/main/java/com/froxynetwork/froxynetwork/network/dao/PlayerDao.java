@@ -41,7 +41,8 @@ public interface PlayerDao {
 	/**
 	 * Get a player from his UUID or his name
 	 * 
-	 * @param uuid The uuid of the player, or his name
+	 * @param uuid
+	 *            The uuid of the player, or his name
 	 * @return Specific player if exists
 	 */
 	@GET("player/{uuid}")
@@ -50,21 +51,24 @@ public interface PlayerDao {
 	/**
 	 * Register a new player to the REST service
 	 * 
-	 * @param player The player
+	 * @param player
+	 *            The player
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
 	@POST("player")
 	public Call<PlayerDataOutput> createPlayer(@Body Player player);
 
-    /**
-     * Edit an existing player to the REST service
-     * 
-     * @param uuid The UUID of the player
-     * @param player The player
-     * @return The response
-     */
-    @Headers("Content-Type: application/json")
-    @PUT("player/{uuid}")
-    public Call<PlayerDataOutput> updatePlayer(@Path("uuid") String uuid, @Body Player player);
+	/**
+	 * Edit an existing player to the REST service
+	 * 
+	 * @param uuid
+	 *            The UUID of the player
+	 * @param player
+	 *            The player
+	 * @return The response
+	 */
+	@Headers("Content-Type: application/json")
+	@PUT("player/{uuid}")
+	public Call<PlayerDataOutput> updatePlayer(@Path("uuid") String uuid, @Body Player player);
 }

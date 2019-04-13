@@ -3,7 +3,6 @@ package com.froxynetwork.froxynetwork.network.output;
 import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
 
 import lombok.Getter;
-import lombok.ToString;
 
 /**
  * MIT License

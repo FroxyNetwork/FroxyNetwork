@@ -66,7 +66,7 @@ public class AuthenticationInterceptor implements Interceptor {
 	 *            The clientCredential, provided by
 	 *            {@link Credentials#basic(String, String)}
 	 */
-	public AuthenticationInterceptor(String clientCredential) {
+	public AuthenticationInterceptor(String clientCredential, String url) {
 		retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
 				.client(new OkHttpClient.Builder().addInterceptor(new Interceptor() {
 
@@ -75,7 +75,7 @@ public class AuthenticationInterceptor implements Interceptor {
 						return chain.proceed(
 								chain.request().newBuilder().header("Authorization", clientCredential).build());
 					}
-				}).build()).baseUrl("http://localhost/").build();
+				}).build()).baseUrl(url).build();
 		oauth2Dao = retrofit.create(OAuth2Dao.class);
 		if (expirationDate == null || expirationDate.before(new Date())) {
 			// The authentication Token is invalid.

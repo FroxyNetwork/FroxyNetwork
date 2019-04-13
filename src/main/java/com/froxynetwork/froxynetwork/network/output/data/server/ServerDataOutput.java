@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
  * @author 0ddlyoko
  */
 public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server> {
-	
+
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
@@ -45,19 +45,17 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private String status;
 		private Date creationTime;
 	}
-	
+
 	public enum ServerStatus {
-		STARTING,
-		WAITING,
-		STARTED,
-		ENDING,
-		ENDED;
-		
+		STARTING, WAITING, STARTED, ENDING, ENDED;
+
 		/**
 		 * Check if b is after or equals to a
 		 * 
-		 * @param a The first status
-		 * @param b The second status
+		 * @param a
+		 *            The first status
+		 * @param b
+		 *            The second status
 		 * 
 		 * @return true if b is after or equals to a
 		 */

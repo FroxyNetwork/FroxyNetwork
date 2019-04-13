@@ -45,7 +45,8 @@ public final class ServiceHelper {
 	private ServiceHelper() {
 	}
 
-	protected static <T extends GeneralDataOutput<U>, U> retrofit2.Callback<T> callback(Callback<U> callback, Class<T> clazz) {
+	protected static <T extends GeneralDataOutput<U>, U> retrofit2.Callback<T> callback(Callback<U> callback,
+			Class<T> clazz) {
 		return new retrofit2.Callback<T>() {
 
 			@Override
@@ -71,7 +72,8 @@ public final class ServiceHelper {
 		};
 	}
 
-	protected static <T extends GeneralDataOutput<U>, U> T response(Response<T> response, Class<T> clazz) throws IOException {
+	protected static <T extends GeneralDataOutput<U>, U> T response(Response<T> response, Class<T> clazz)
+			throws IOException {
 		T body = null;
 		if (response.isSuccessful()) {
 			// OK

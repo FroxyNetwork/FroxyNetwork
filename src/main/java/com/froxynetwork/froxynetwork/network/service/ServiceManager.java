@@ -1,6 +1,7 @@
 package com.froxynetwork.froxynetwork.network.service;
 
 import lombok.Getter;
+import retrofit2.Retrofit;
 
 /**
  * MIT License
@@ -35,8 +36,8 @@ public final class ServiceManager {
 	@Getter
 	private ServerService serverService;
 
-	public ServiceManager() {
-		playerService = new PlayerService();
-		serverService = new ServerService();
+	public ServiceManager(Retrofit retrofit) {
+		playerService = new PlayerService(retrofit);
+		serverService = new ServerService(retrofit);
 	}
 }

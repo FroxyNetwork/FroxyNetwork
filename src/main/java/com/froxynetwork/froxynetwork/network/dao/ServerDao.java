@@ -1,5 +1,6 @@
 package com.froxynetwork.froxynetwork.network.dao;
 
+import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput;
@@ -43,7 +44,8 @@ public interface ServerDao {
 	/**
 	 * Get a server from his id
 	 * 
-	 * @param id The id of the server
+	 * @param id
+	 *            The id of the server
 	 * @return Specific server if exists
 	 */
 	@GET("server/{id}")
@@ -51,6 +53,7 @@ public interface ServerDao {
 
 	/**
 	 * Get all server connected
+	 * 
 	 * @return a list of all server connected
 	 */
 	@GET("server")
@@ -59,7 +62,8 @@ public interface ServerDao {
 	/**
 	 * Register a new server to the REST service
 	 * 
-	 * @param server The server
+	 * @param server
+	 *            The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
@@ -69,8 +73,10 @@ public interface ServerDao {
 	/**
 	 * Edit an existing server to the REST service
 	 * 
-	 * @param id The id of the server
-	 * @param server The server
+	 * @param id
+	 *            The id of the server
+	 * @param server
+	 *            The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
@@ -80,9 +86,10 @@ public interface ServerDao {
 	/**
 	 * Delete (close) an existing server to the REST service
 	 * 
-	 * @param id The id of the server
+	 * @param id
+	 *            The id of the server
 	 * @return The response
 	 */
 	@DELETE("server/{id}")
-	public Call<ServerDataOutput> deleteServer(@Path("id") int id);
+	public Call<EmptyDataOutput> deleteServer(@Path("id") int id);
 }

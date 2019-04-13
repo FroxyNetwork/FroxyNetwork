@@ -1,8 +1,4 @@
-package com.froxynetwork.froxynetwork.network.output;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.froxynetwork.froxynetwork.network.output.data;
 
 /**
  * MIT License
@@ -29,21 +25,10 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public class Player {
-		private String uuid;
-		private String pseudo;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private String firstLogin;
-		private String lastLogin;
-		private String ip;
-		private String lang;
+/**
+ * This (empty) class is used for requests that don't return data
+ */
+public class EmptyDataOutput extends GeneralDataOutput<EmptyDataOutput.Empty> {
+	public class Empty {
 	}
 }
