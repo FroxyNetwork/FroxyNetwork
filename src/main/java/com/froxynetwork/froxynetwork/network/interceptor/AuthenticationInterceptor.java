@@ -97,14 +97,17 @@ public class AuthenticationInterceptor implements Interceptor {
 
 	private void askNewToken() {
 		for (int i = 0; i <= 10; i++) {
-			LOG.info("Asking a new Authentication token, try {}", i);
+			if (LOG.isInfoEnabled())
+				LOG.info("Asking a new Authentication token, try {}", i);
 			try {
 				retrofit2.Response<OAuth2> resp = oauth2Dao.askToken("client_credentials").execute();
 				OAuth2 body = resp.body();
 				if (body == null || body.getAccess_token() == null
 						|| "".equalsIgnoreCase(body.getAccess_token().trim())) {
-					LOG.warn("Error while getting a new Authentication token, error {}, try {}", resp.code(), i);
-					LOG.warn("Got response {}", resp.errorBody().string());
+					if (LOG.isWarnEnabled()) {
+						LOG.warn("Error while getting a new Authentication token, error {}, try {}", resp.code(), i);
+						LOG.warn("Got response {}", resp.errorBody().string());
+					}
 					continue;
 				}
 				token = body.getAccess_token();
