@@ -53,7 +53,7 @@ public final class NetworkManager {
 		serviceManager = new ServiceManager(retrofit);
 	}
 
-	public final ServiceManager getNetworkServiceManager() {
+	public final ServiceManager getNetwork() {
 		return serviceManager;
 	}
 
