@@ -52,9 +52,13 @@ public final class NetworkManager {
 				.client(okHttpClient).baseUrl(url).build();
 		serviceManager = new ServiceManager(retrofit);
 	}
+	
+	public final ServiceManager network() {
+		return serviceManager;
+	}
 
 	public final ServiceManager getNetwork() {
-		return serviceManager;
+		return network();
 	}
 
 	/**
