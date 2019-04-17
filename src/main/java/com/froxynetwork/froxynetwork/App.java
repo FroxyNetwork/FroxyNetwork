@@ -39,7 +39,7 @@ public class App {
 		String clientId = "WEBSOCKET_045cfff18fe0ab8393178e7b7826f227";
 		String clientSecret = "SECRET_ecfdc21a8d5022e2db64b1315b087aaf";
 		NetworkManager nm = new NetworkManager("http://localhost/", clientId, clientSecret);
-		ServiceManager sm = nm.getNetworkServiceManager();
+		ServiceManager sm = nm.getNetwork();
 		// Add server
 		sm.getServerService().asyncAddServer("koth_1", 20001, new Callback<Server>() {
 			@Override
