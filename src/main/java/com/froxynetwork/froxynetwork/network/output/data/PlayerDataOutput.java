@@ -36,7 +36,7 @@ public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player>
 	@AllArgsConstructor
 	public static class Player {
 		private String uuid;
-		private String pseudo;
+		private String nickname;
 		private String displayName;
 		private int coins;
 		private int level;
