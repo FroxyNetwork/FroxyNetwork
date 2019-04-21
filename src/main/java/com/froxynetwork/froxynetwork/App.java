@@ -40,6 +40,7 @@ public class App {
 		String clientSecret = "SECRET_ecfdc21a8d5022e2db64b1315b087aaf";
 		NetworkManager nm = new NetworkManager("http://localhost/", clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
+
 		// Add server
 		sm.getServerService().asyncAddServer("koth_1", 20001, new Callback<Server>() {
 			@Override
@@ -56,8 +57,29 @@ public class App {
 						@Override
 						public void onResponse(Server response) {
 							System.out.println(response);
-							// Shutdown at the end
-							nm.shutdown();
+							sm.getServerService().asyncGetServer(999, new Callback<Server>() {
+
+								@Override
+								public void onResponse(Server response2) {
+									System.out.println(response2);
+									// Shutdown at the end
+									nm.shutdown();
+								};
+
+								@Override
+								public void onFailure(RestException ex) {
+									ex.printStackTrace();
+									// Shutdown at the end
+									nm.shutdown();
+								}
+
+								@Override
+								public void onFatalFailure(Throwable t) {
+									t.printStackTrace();
+									// Shutdown at the end
+									nm.shutdown();
+								}
+							});
 						};
 
 						@Override

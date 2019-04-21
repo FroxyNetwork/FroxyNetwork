@@ -34,8 +34,11 @@ import lombok.Data;
 public class GeneralDataOutput<T> {
 
 	private boolean error;
-
+	
 	private int code;
+
+	@SerializedName("error_id")
+	private String errorId;
 
 	@SerializedName("error_message")
 	private String errorMessage;
