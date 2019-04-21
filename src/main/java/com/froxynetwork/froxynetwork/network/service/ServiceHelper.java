@@ -80,7 +80,13 @@ public final class ServiceHelper {
 			body = response.body();
 		} else {
 			String json = response.errorBody().string();
-			body = new Gson().fromJson(json, clazz);
+			try {
+				body = new Gson().fromJson(json, clazz);
+			} catch (Exception ex) {
+				if (LOG.isErrorEnabled())
+					LOG.error("Error while parsing result from REST server: {}", json);
+				throw ex;
+			}
 		}
 		if (LOG.isDebugEnabled())
 			LOG.debug("Got code {}, body = {}", response.code(), body.toJson());
