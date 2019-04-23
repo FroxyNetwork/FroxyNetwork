@@ -1,13 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>FroxyNetwork</groupId>
-  <artifactId>FroxyNetwork</artifactId>
-  <version>0.1.2</version>
-  <packaging>jar</packaging>
+	<groupId>com.froxynetwork</groupId>
+	<artifactId>FroxyNetwork</artifactId>
+	<version>0.1.2</version>
+	<packaging>jar</packaging>
 
-  <name>FroxyNetwork</name>
+	<name>FroxyNetwork</name>
 	<url>https://github.com/FroxyNetwork/FroxyNetwork</url>
 
 	<properties>
@@ -26,7 +27,7 @@
 	</developers>
 
 	<!-- Configuration of dependencies -->
-  <dependencies>
+	<dependencies>
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
