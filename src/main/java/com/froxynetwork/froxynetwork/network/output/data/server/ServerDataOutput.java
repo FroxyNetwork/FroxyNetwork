@@ -44,6 +44,7 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private int port;
 		private String status;
 		private Date creationTime;
+		private Date endTime;
 	}
 
 	public enum ServerStatus {
