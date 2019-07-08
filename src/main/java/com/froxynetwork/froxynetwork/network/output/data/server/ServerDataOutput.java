@@ -41,6 +41,7 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 	public static class Server {
 		private int id;
 		private String name;
+		private String type;
 		private int port;
 		private String status;
 		private Date creationTime;

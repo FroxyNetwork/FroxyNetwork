@@ -42,7 +42,7 @@ public class App {
 		ServiceManager sm = nm.getNetwork();
 
 		// Add server
-		sm.getServerService().asyncAddServer("koth_1", 20001, new Callback<Server>() {
+		sm.getServerService().asyncAddServer("koth_1", "KOTH", 20001, new Callback<Server>() {
 			@Override
 			public void onResponse(Server server) {
 				System.out.println(server);
