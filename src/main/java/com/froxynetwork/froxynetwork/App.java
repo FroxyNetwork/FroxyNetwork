@@ -36,8 +36,8 @@ public class App {
 
 	public App() throws Exception {
 		// TODO URL in config file
-		String clientId = "WEBSOCKET_045cfff18fe0ab8393178e7b7826f227";
-		String clientSecret = "SECRET_ecfdc21a8d5022e2db64b1315b087aaf";
+		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
+		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
 		NetworkManager nm = new NetworkManager("http://localhost/", clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
@@ -57,7 +57,7 @@ public class App {
 						@Override
 						public void onResponse(Server response) {
 							System.out.println(response);
-							sm.getServerService().asyncGetServer(999, new Callback<Server>() {
+							sm.getServerService().asyncGetServer("999", new Callback<Server>() {
 
 								@Override
 								public void onResponse(Server response2) {
