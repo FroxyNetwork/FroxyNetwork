@@ -46,6 +46,22 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private String status;
 		private Date creationTime;
 		private Date endTime;
+		
+		public ServerStatus getStatus() {
+			switch (status) {
+			case "STARTING":
+				return ServerStatus.STARTING;
+			case "WAITING":
+				return ServerStatus.WAITING;
+			case "STARTED":
+				return ServerStatus.STARTED;
+			case "ENDING":
+				return ServerStatus.ENDING;
+			case "ENDED":
+			default:
+				return ServerStatus.ENDED;
+			}
+		}
 	}
 
 	public enum ServerStatus {
