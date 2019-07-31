@@ -3,6 +3,7 @@ package com.froxynetwork.froxynetwork.network.output.data.server;
 import java.util.Date;
 
 import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -87,7 +88,9 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class ServerAuth {
-		private String client_id;
-		private String client_secret;
+		@SerializedName("client_id")
+		private String clientId;
+		@SerializedName("client_secret")
+		private String clientSecret;
 	}
 }
