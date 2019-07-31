@@ -88,15 +88,15 @@ public class ServerService {
 	public void asyncAddServer(String name, String type, int port, Callback<Server> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncAddServer: Adding new server, name = {}, type = {}, port = {}", name, type, port);
-		serverDao.createServer(new Server("", name, type, port, null, null, null))
+		serverDao.createServer(new Server("", name, type, port, null, null, null, null))
 				.enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
 	public Server syncAddServer(String name, String type, int port) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncAddServer: Adding new server, name = {}, type = {}, port = {}", name, type, port);
-		Response<ServerDataOutput> response = serverDao.createServer(new Server("", name, type, port, null, null, null))
-				.execute();
+		Response<ServerDataOutput> response = serverDao
+				.createServer(new Server("", name, type, port, null, null, null, null)).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);

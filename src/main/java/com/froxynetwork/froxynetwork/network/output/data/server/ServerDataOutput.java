@@ -46,7 +46,8 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private String status;
 		private Date creationTime;
 		private Date endTime;
-		
+		private ServerAuth auth;
+
 		public ServerStatus getStatus() {
 			switch (status) {
 			case "STARTING":
@@ -80,5 +81,13 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		public static boolean isAfter(ServerStatus a, ServerStatus b) {
 			return b.ordinal() >= a.ordinal();
 		}
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServerAuth {
+		private String client_id;
+		private String client_secret;
 	}
 }
