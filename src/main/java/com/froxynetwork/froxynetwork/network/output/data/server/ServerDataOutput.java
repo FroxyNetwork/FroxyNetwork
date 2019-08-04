@@ -92,5 +92,15 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private String clientId;
 		@SerializedName("client_secret")
 		private String clientSecret;
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder("ServerDataOutput.ServerAuth(clientId=");
+			sb.append(clientId);
+			sb.append(", clientSecret=");
+			sb.append("<hidden>");
+			sb.append(")");
+			return sb.toString();
+		}
 	}
 }
