@@ -72,7 +72,10 @@ public enum Error {
 	INTERNAL_SERVER_JSON(1000, "Internal Server Error: servers.json is not a valid json file !"),
     INTERNAL_SERVER_CONFIG(1001, "Internal Server Error: config.ini is not a valid ini file !"),
     INTERNAL_SERVER_CONFIG_MONGODB(1002, "Internal Server Error: config.ini is not a valid ini file !"),
-    INTERNAL_SERVER_DATABASE(1003, "Internal Server Error: Cannot contact database !");
+    INTERNAL_SERVER_DATABASE(1003, "Internal Server Error: Cannot contact database !"),
+    SERVER_TYPE_NOT_FOUND(1004, "Server type not found !"),
+    SERVER_TYPE_FILE_NOT_FOUND(1005, "Server file not found !");
+    
 	
 	private int id;
 	private String message;

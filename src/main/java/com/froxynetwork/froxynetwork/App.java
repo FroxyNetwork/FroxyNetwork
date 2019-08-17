@@ -3,8 +3,9 @@ package com.froxynetwork.froxynetwork;
 import com.froxynetwork.froxynetwork.network.NetworkManager;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
-import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.ServerStatus;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.MainServerConfigDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.MainServerConfigDataOutput.MainServerConfig;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServerConfig;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
 
 /**
@@ -38,77 +39,114 @@ public class App {
 		// TODO URL in config file
 		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
 		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
-		NetworkManager nm = new NetworkManager("http://localhost/", clientId, clientSecret);
+		NetworkManager nm = new NetworkManager("https://localhost/", clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
-		// Add server
-		sm.getServerService().asyncAddServer("koth_1", "KOTH", 20001, new Callback<Server>() {
+		// Retrieve server configuration
+		sm.getServerConfigService().asyncGetServerConfig(new Callback<MainServerConfigDataOutput.MainServerConfig>() {
+
 			@Override
-			public void onResponse(Server server) {
-				System.out.println(server);
-				server.setStatus(ServerStatus.STARTED.name());
+			public void onResponse(MainServerConfig response) {
+				System.out.println(response);
 				try {
-					System.out.println("Editing server");
-					Server editedServer = sm.getServerService().syncEditServer(server);
-					System.out.println("Deleting server");
-					sm.getServerService().syncDeleteServer(editedServer.getId());
-					sm.getServerService().asyncGetServer(editedServer.getId(), new Callback<Server>() {
-
-						@Override
-						public void onResponse(Server response) {
-							System.out.println(response);
-							sm.getServerService().asyncGetServer("999", new Callback<Server>() {
-
-								@Override
-								public void onResponse(Server response2) {
-									System.out.println(response2);
-									// Shutdown at the end
-									nm.shutdown();
-								};
-
-								@Override
-								public void onFailure(RestException ex) {
-									ex.printStackTrace();
-									// Shutdown at the end
-									nm.shutdown();
-								}
-
-								@Override
-								public void onFatalFailure(Throwable t) {
-									t.printStackTrace();
-									// Shutdown at the end
-									nm.shutdown();
-								}
-							});
-						};
-
-						@Override
-						public void onFailure(RestException ex) {
-							ex.printStackTrace();
-						}
-
-						@Override
-						public void onFatalFailure(Throwable t) {
-							t.printStackTrace();
-						}
-					});
-				} catch (RestException ex) {
-					ex.printStackTrace();
+					ServerConfig sc = sm.getServerConfigService().syncGetServerConfig("koth");
+					System.out.println(sc);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-			};
+				try {
+					ServerConfig sc = sm.getServerConfigService().syncGetServerConfig("koth_4players");
+					System.out.println(sc);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				// Shutdown at the end
+				nm.shutdown();
+			}
 
 			@Override
 			public void onFailure(RestException ex) {
-				ex.printStackTrace();
+				// Shutdown at the end
+				nm.shutdown();
 			}
 
 			@Override
 			public void onFatalFailure(Throwable t) {
-				t.printStackTrace();
+				// Shutdown at the end
+				nm.shutdown();
 			}
 		});
+		// Add server
+		
+		// sm.getServerService().asyncAddServer("koth_1", "KOTH", 20001, new
+		// Callback<Server>() {
+		// @Override
+		// public void onResponse(Server server) {
+		// System.out.println(server);
+		// server.setStatus(ServerStatus.STARTED.name());
+		// try {
+		// System.out.println("Editing server");
+		// Server editedServer = sm.getServerService().syncEditServer(server);
+		// System.out.println("Deleting server");
+		// sm.getServerService().syncDeleteServer(editedServer.getId());
+		// sm.getServerService().asyncGetServer(editedServer.getId(), new
+		// Callback<Server>() {
+		//
+		// @Override
+		// public void onResponse(Server response) {
+		// System.out.println(response);
+		// sm.getServerService().asyncGetServer("999", new Callback<Server>() {
+		//
+		// @Override
+		// public void onResponse(Server response2) {
+		// System.out.println(response2);
+		// // Shutdown at the end
+		// nm.shutdown();
+		// };
+		//
+		// @Override
+		// public void onFailure(RestException ex) {
+		// ex.printStackTrace();
+		// // Shutdown at the end
+		// nm.shutdown();
+		// }
+		//
+		// @Override
+		// public void onFatalFailure(Throwable t) {
+		// t.printStackTrace();
+		// // Shutdown at the end
+		// nm.shutdown();
+		// }
+		// });
+		// };
+		//
+		// @Override
+		// public void onFailure(RestException ex) {
+		// ex.printStackTrace();
+		// }
+		//
+		// @Override
+		// public void onFatalFailure(Throwable t) {
+		// t.printStackTrace();
+		// }
+		// });
+		// } catch (RestException ex) {
+		// ex.printStackTrace();
+		// } catch (Exception ex) {
+		// ex.printStackTrace();
+		// }
+		// };
+		//
+		// @Override
+		// public void onFailure(RestException ex) {
+		// ex.printStackTrace();
+		// }
+		//
+		// @Override
+		// public void onFatalFailure(Throwable t) {
+		// t.printStackTrace();
+		// }
+		// });
 	}
 
 	public static void main(String[] args) throws Exception {
