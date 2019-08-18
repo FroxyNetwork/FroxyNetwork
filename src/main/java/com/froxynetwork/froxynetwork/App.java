@@ -3,9 +3,8 @@ package com.froxynetwork.froxynetwork;
 import com.froxynetwork.froxynetwork.network.NetworkManager;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.froxynetwork.froxynetwork.network.output.data.server.config.MainServerConfigDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.server.config.MainServerConfigDataOutput.MainServerConfig;
-import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServerConfig;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServersConfig;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
 
 /**
@@ -37,25 +36,26 @@ public class App {
 
 	public App() throws Exception {
 		// TODO URL in config file
+		String url = "https://localhost/";
 		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
 		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
-		NetworkManager nm = new NetworkManager("https://localhost/", clientId, clientSecret);
+		NetworkManager nm = new NetworkManager(url, clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
 		// Retrieve server configuration
-		sm.getServerConfigService().asyncGetServerConfig(new Callback<MainServerConfigDataOutput.MainServerConfig>() {
+		sm.getServerConfigService().asyncGetServerConfig(new Callback<ServerConfigDataOutput.ServersConfig>() {
 
 			@Override
-			public void onResponse(MainServerConfig response) {
+			public void onResponse(ServersConfig response) {
 				System.out.println(response);
 				try {
-					ServerConfig sc = sm.getServerConfigService().syncGetServerConfig("koth");
+					ServersConfig sc = sm.getServerConfigService().syncGetServerConfig("koth");
 					System.out.println(sc);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 				try {
-					ServerConfig sc = sm.getServerConfigService().syncGetServerConfig("koth_4players");
+					ServersConfig sc = sm.getServerConfigService().syncGetServerConfig("koth_4players");
 					System.out.println(sc);
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -77,7 +77,7 @@ public class App {
 			}
 		});
 		// Add server
-		
+
 		// sm.getServerService().asyncAddServer("koth_1", "KOTH", 20001, new
 		// Callback<Server>() {
 		// @Override

@@ -31,7 +31,14 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOutput.ServerConfig> {
+public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOutput.ServersConfig> {
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServersConfig {
+		private ServerConfig[] types;
+	}
 
 	@Data
 	@NoArgsConstructor

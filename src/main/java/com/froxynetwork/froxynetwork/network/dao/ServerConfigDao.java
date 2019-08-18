@@ -1,6 +1,5 @@
 package com.froxynetwork.froxynetwork.network.dao;
 
-import com.froxynetwork.froxynetwork.network.output.data.server.config.MainServerConfigDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
 
 import retrofit2.Call;
@@ -40,7 +39,7 @@ public interface ServerConfigDao {
 	 * @return The configuration of the REST server
 	 */
 	@GET("server/config")
-	public Call<MainServerConfigDataOutput> getServerConfig();
+	public Call<ServerConfigDataOutput> getServerConfig();
 
 	@GET("server/config/{type}")
 	public Call<ServerConfigDataOutput> getServerConfig(@Path("type") String type);

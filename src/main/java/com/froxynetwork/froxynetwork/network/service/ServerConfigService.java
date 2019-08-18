@@ -6,10 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.froxynetwork.froxynetwork.network.dao.ServerConfigDao;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.froxynetwork.froxynetwork.network.output.data.server.config.MainServerConfigDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.server.config.MainServerConfigDataOutput.MainServerConfig;
 import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServerConfig;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServersConfig;
 
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -49,30 +47,30 @@ public class ServerConfigService {
 		serverConfigDao = retrofit.create(ServerConfigDao.class);
 	}
 
-	public void asyncGetServerConfig(Callback<MainServerConfig> callback) {
+	public void asyncGetServerConfig(Callback<ServersConfig> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncGetServerConfig: Retrieving server configuration");
-		serverConfigDao.getServerConfig().enqueue(ServiceHelper.callback(callback, MainServerConfigDataOutput.class));
+		serverConfigDao.getServerConfig().enqueue(ServiceHelper.callback(callback, ServerConfigDataOutput.class));
 	}
 
-	public MainServerConfig syncGetServerConfig() throws RestException, Exception {
+	public ServersConfig syncGetServerConfig() throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncGetServerConfig: Retrieving server configuration");
-		Response<MainServerConfigDataOutput> response = serverConfigDao.getServerConfig().execute();
-		MainServerConfigDataOutput body = ServiceHelper.response(response, MainServerConfigDataOutput.class);
+		Response<ServerConfigDataOutput> response = serverConfigDao.getServerConfig().execute();
+		ServerConfigDataOutput body = ServiceHelper.response(response, ServerConfigDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
 		else
 			return body.getData();
 	}
 
-	public void asyncGetServerConfig(String type, Callback<ServerConfig> callback) {
+	public void asyncGetServerConfig(String type, Callback<ServersConfig> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncGetServerConfig: Retrieving server configuration type {}", type);
 		serverConfigDao.getServerConfig(type).enqueue(ServiceHelper.callback(callback, ServerConfigDataOutput.class));
 	}
 
-	public ServerConfig syncGetServerConfig(String type) throws RestException, Exception {
+	public ServersConfig syncGetServerConfig(String type) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncGetServerConfig: Retrieving server configuration type {}", type);
 		Response<ServerConfigDataOutput> response = serverConfigDao.getServerConfig(type).execute();
