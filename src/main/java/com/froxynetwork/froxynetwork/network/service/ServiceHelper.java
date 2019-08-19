@@ -54,7 +54,7 @@ public final class ServiceHelper {
 				T body;
 				try {
 					body = response(response, clazz);
-				} catch (IOException ex) {
+				} catch (Exception ex) {
 					onFailure(call, ex);
 					return;
 				}

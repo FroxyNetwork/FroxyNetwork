@@ -1,7 +1,10 @@
-package com.froxynetwork.froxynetwork.network.service;
+package com.froxynetwork.froxynetwork.network.dao;
 
-import lombok.Getter;
-import retrofit2.Retrofit;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Streaming;
 
 /**
  * MIT License
@@ -28,24 +31,16 @@ import retrofit2.Retrofit;
  * 
  * @author 0ddlyoko
  */
-public final class ServiceManager {
+public interface ServerDownloadDao {
 
-	@Getter
-	private PlayerService playerService;
-
-	@Getter
-	private ServerService serverService;
-
-	@Getter
-	private ServerConfigService serverConfigService;
-
-	@Getter
-	private ServerDownloadService serverDownloadService;
-
-	public ServiceManager(Retrofit retrofit) {
-		playerService = new PlayerService(retrofit);
-		serverService = new ServerService(retrofit);
-		serverConfigService = new ServerConfigService(retrofit);
-		serverDownloadService = new ServerDownloadService(retrofit);
-	}
+	/**
+	 * Download a server
+	 * 
+	 * @param type
+	 *            The type of the server
+	 * @return
+	 */
+	@Streaming
+	@GET("server/download/{type}")
+	public Call<ResponseBody> getServerConfig(@Path("type") String type);
 }

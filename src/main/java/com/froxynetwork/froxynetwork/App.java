@@ -1,8 +1,12 @@
 package com.froxynetwork.froxynetwork;
 
+import java.io.File;
+
 import com.froxynetwork.froxynetwork.network.NetworkManager;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
+import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput.Empty;
 import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServersConfig;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
@@ -60,18 +64,66 @@ public class App {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				// Shutdown at the end
-				nm.shutdown();
+				// Download file
+				File outputDir = new File("G:\\User\\natha\\Desktop\\minecraft\\Servers\\Servers\\Src");
+				sm.getServerDownloadService().asyncDownloadServer("koth_4players",
+						new File(outputDir, "koth_4players.zip"), new Callback<EmptyDataOutput.Empty>() {
+
+							@Override
+							public void onResponse(Empty response) {
+								// Not exists
+								// Shutdown at the end
+								nm.shutdown();
+							}
+
+							@Override
+							public void onFailure(RestException ex) {
+								// Ok
+								sm.getServerDownloadService().asyncDownloadServer("koth",
+										new File(outputDir, "koth.zip"), new Callback<EmptyDataOutput.Empty>() {
+
+											@Override
+											public void onResponse(Empty response) {
+												System.out.println("DONE");
+												// Shutdown at the end
+												nm.shutdown();
+											}
+
+											@Override
+											public void onFailure(RestException ex) {
+												ex.printStackTrace();
+												// Shutdown at the end
+												nm.shutdown();
+											}
+
+											@Override
+											public void onFatalFailure(Throwable t) {
+												t.printStackTrace();
+												// Shutdown at the end
+												nm.shutdown();
+											}
+										});
+							}
+
+							@Override
+							public void onFatalFailure(Throwable t) {
+								t.printStackTrace();
+								// Shutdown at the end
+								nm.shutdown();
+							}
+						});
 			}
 
 			@Override
 			public void onFailure(RestException ex) {
+				ex.printStackTrace();
 				// Shutdown at the end
 				nm.shutdown();
 			}
 
 			@Override
 			public void onFatalFailure(Throwable t) {
+				t.printStackTrace();
 				// Shutdown at the end
 				nm.shutdown();
 			}
