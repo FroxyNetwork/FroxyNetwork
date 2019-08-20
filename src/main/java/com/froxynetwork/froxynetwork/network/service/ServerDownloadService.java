@@ -129,4 +129,48 @@ public class ServerDownloadService {
 			}
 		});
 	}
+
+	public Empty syncDownloadServer(String id, File output) throws RestException, Exception {
+		if (LOG.isDebugEnabled())
+			LOG.debug("syncDownloadServer: Retrieving server {}", id);
+		Response<ResponseBody> response = serverDownloadDao.getServerConfig(id).execute();
+
+		if (!response.isSuccessful()) {
+			// Error
+			// Let's try to get the json error
+			String json = response.errorBody().string();
+			EmptyDataOutput body;
+			body = new Gson().fromJson(json, EmptyDataOutput.class);
+			// Done, call onFailure to handle the error
+			throw new RestException(body);
+		} else {
+			// Ok
+			LOG.info("Server contacted, downloading file type {}", id);
+			ResponseBody body = response.body();
+			InputStream is = null;
+			FileOutputStream os = null;
+			try {
+				byte[] fileReader = new byte[4096];
+
+				is = body.byteStream();
+				os = new FileOutputStream(output);
+
+				while (true) {
+					int read = is.read(fileReader);
+					if (read == -1)
+						break;
+					os.write(fileReader, 0, read);
+				}
+				os.flush();
+				// Done
+				LOG.info("File {}.zip successfully downloaded !", id);
+				return new EmptyDataOutput().new Empty();
+			} finally {
+				if (is != null)
+					is.close();
+				if (os != null)
+					os.close();
+			}
+		}
+	}
 }

@@ -39,6 +39,8 @@ import com.froxynetwork.froxynetwork.network.service.ServiceManager;
 public class App {
 
 	public App() throws Exception {
+		// This is just for TESTING
+
 		// TODO URL in config file
 		String url = "https://localhost/";
 		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
@@ -79,30 +81,18 @@ public class App {
 							@Override
 							public void onFailure(RestException ex) {
 								// Ok
-								sm.getServerDownloadService().asyncDownloadServer("koth",
-										new File(outputDir, "koth.zip"), new Callback<EmptyDataOutput.Empty>() {
 
-											@Override
-											public void onResponse(Empty response) {
-												System.out.println("DONE");
-												// Shutdown at the end
-												nm.shutdown();
-											}
-
-											@Override
-											public void onFailure(RestException ex) {
-												ex.printStackTrace();
-												// Shutdown at the end
-												nm.shutdown();
-											}
-
-											@Override
-											public void onFatalFailure(Throwable t) {
-												t.printStackTrace();
-												// Shutdown at the end
-												nm.shutdown();
-											}
-										});
+								try {
+									sm.getServerDownloadService().syncDownloadServer("koth",
+											new File(outputDir, "koth.zip"));
+									System.out.println("DONE");
+								} catch (RestException ex2) {
+									ex2.printStackTrace();
+								} catch (Exception ex2) {
+									ex2.printStackTrace();
+								}
+								// Shutdown at the end
+								nm.shutdown();
 							}
 
 							@Override
@@ -128,77 +118,6 @@ public class App {
 				nm.shutdown();
 			}
 		});
-		// Add server
-
-		// sm.getServerService().asyncAddServer("koth_1", "KOTH", 20001, new
-		// Callback<Server>() {
-		// @Override
-		// public void onResponse(Server server) {
-		// System.out.println(server);
-		// server.setStatus(ServerStatus.STARTED.name());
-		// try {
-		// System.out.println("Editing server");
-		// Server editedServer = sm.getServerService().syncEditServer(server);
-		// System.out.println("Deleting server");
-		// sm.getServerService().syncDeleteServer(editedServer.getId());
-		// sm.getServerService().asyncGetServer(editedServer.getId(), new
-		// Callback<Server>() {
-		//
-		// @Override
-		// public void onResponse(Server response) {
-		// System.out.println(response);
-		// sm.getServerService().asyncGetServer("999", new Callback<Server>() {
-		//
-		// @Override
-		// public void onResponse(Server response2) {
-		// System.out.println(response2);
-		// // Shutdown at the end
-		// nm.shutdown();
-		// };
-		//
-		// @Override
-		// public void onFailure(RestException ex) {
-		// ex.printStackTrace();
-		// // Shutdown at the end
-		// nm.shutdown();
-		// }
-		//
-		// @Override
-		// public void onFatalFailure(Throwable t) {
-		// t.printStackTrace();
-		// // Shutdown at the end
-		// nm.shutdown();
-		// }
-		// });
-		// };
-		//
-		// @Override
-		// public void onFailure(RestException ex) {
-		// ex.printStackTrace();
-		// }
-		//
-		// @Override
-		// public void onFatalFailure(Throwable t) {
-		// t.printStackTrace();
-		// }
-		// });
-		// } catch (RestException ex) {
-		// ex.printStackTrace();
-		// } catch (Exception ex) {
-		// ex.printStackTrace();
-		// }
-		// };
-		//
-		// @Override
-		// public void onFailure(RestException ex) {
-		// ex.printStackTrace();
-		// }
-		//
-		// @Override
-		// public void onFatalFailure(Throwable t) {
-		// t.printStackTrace();
-		// }
-		// });
 	}
 
 	public static void main(String[] args) throws Exception {
