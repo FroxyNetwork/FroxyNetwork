@@ -1,7 +1,10 @@
-package com.froxynetwork.froxynetwork.network.service;
+package com.froxynetwork.froxynetwork.network.output.data.server.config;
 
-import lombok.Getter;
-import retrofit2.Retrofit;
+import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * MIT License
@@ -28,24 +31,21 @@ import retrofit2.Retrofit;
  * 
  * @author 0ddlyoko
  */
-public final class ServiceManager {
+public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOutput.ServersConfig> {
 
-	@Getter
-	private PlayerService playerService;
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServersConfig {
+		private ServerConfig[] types;
+	}
 
-	@Getter
-	private ServerService serverService;
-
-	@Getter
-	private ServerConfigService serverConfigService;
-
-	@Getter
-	private ServerDownloadService serverDownloadService;
-
-	public ServiceManager(Retrofit retrofit) {
-		playerService = new PlayerService(retrofit);
-		serverService = new ServerService(retrofit);
-		serverConfigService = new ServerConfigService(retrofit);
-		serverDownloadService = new ServerDownloadService(retrofit);
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServerConfig {
+		private String id;
+		private String[] database;
+		private ServerConfig[] variants;
 	}
 }

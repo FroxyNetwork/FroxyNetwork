@@ -49,7 +49,7 @@ public interface ServerDao {
 	 * @return Specific server if exists
 	 */
 	@GET("server/{id}")
-	public Call<ServerDataOutput> getServer(@Path("id") int id);
+	public Call<ServerDataOutput> getServer(@Path("id") String id);
 
 	/**
 	 * Get all server connected
@@ -81,7 +81,7 @@ public interface ServerDao {
 	 */
 	@Headers("Content-Type: application/json")
 	@PUT("server/{id}")
-	public Call<ServerDataOutput> updateServer(@Path("id") int id, @Body Server server);
+	public Call<ServerDataOutput> updateServer(@Path("id") String id, @Body Server server);
 
 	/**
 	 * Delete (close) an existing server to the REST service
@@ -91,5 +91,5 @@ public interface ServerDao {
 	 * @return The response
 	 */
 	@DELETE("server/{id}")
-	public Call<EmptyDataOutput> deleteServer(@Path("id") int id);
+	public Call<EmptyDataOutput> deleteServer(@Path("id") String id);
 }

@@ -1,7 +1,10 @@
-package com.froxynetwork.froxynetwork.network.service;
+package com.froxynetwork.froxynetwork.network.dao;
 
-import lombok.Getter;
-import retrofit2.Retrofit;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 /**
  * MIT License
@@ -28,24 +31,16 @@ import retrofit2.Retrofit;
  * 
  * @author 0ddlyoko
  */
-public final class ServiceManager {
+public interface ServerConfigDao {
 
-	@Getter
-	private PlayerService playerService;
+	/**
+	 * Get the configuration of the REST server
+	 * 
+	 * @return The configuration of the REST server
+	 */
+	@GET("server/config")
+	public Call<ServerConfigDataOutput> getServerConfig();
 
-	@Getter
-	private ServerService serverService;
-
-	@Getter
-	private ServerConfigService serverConfigService;
-
-	@Getter
-	private ServerDownloadService serverDownloadService;
-
-	public ServiceManager(Retrofit retrofit) {
-		playerService = new PlayerService(retrofit);
-		serverService = new ServerService(retrofit);
-		serverConfigService = new ServerConfigService(retrofit);
-		serverDownloadService = new ServerDownloadService(retrofit);
-	}
+	@GET("server/config/{type}")
+	public Call<ServerConfigDataOutput> getServerConfig(@Path("type") String type);
 }

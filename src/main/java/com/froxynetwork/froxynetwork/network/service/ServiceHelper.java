@@ -54,20 +54,23 @@ public final class ServiceHelper {
 				T body;
 				try {
 					body = response(response, clazz);
-				} catch (IOException ex) {
+				} catch (Exception ex) {
 					onFailure(call, ex);
 					return;
 				}
-				if (body.isError())
-					// (Normally) impossible
-					callback.onFailure(new RestException(body));
-				else
-					callback.onResponse(body.getData());
+				if (callback != null) {
+					if (body.isError())
+						// (Normally) impossible
+						callback.onFailure(new RestException(body));
+					else
+						callback.onResponse(body.getData());
+				}
 			}
 
 			@Override
 			public void onFailure(Call<T> call, Throwable t) {
-				callback.onFatalFailure(t);
+				if (callback != null)
+					callback.onFatalFailure(t);
 			}
 		};
 	}

@@ -124,7 +124,7 @@ public class AuthenticationInterceptor implements Interceptor {
 				}
 				return;
 			} catch (IOException ex) {
-				LOG.error("Error while askip new token: ", ex);
+				LOG.error("Error while asking new token: ", ex);
 			}
 		}
 		throw new IllegalStateException("Cannot retrieve a new Authentication Token !");

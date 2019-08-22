@@ -3,6 +3,7 @@ package com.froxynetwork.froxynetwork.network.output.data.server;
 import java.util.Date;
 
 import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,12 +40,30 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class Server {
-		private int id;
+		private String id;
 		private String name;
+		private String type;
 		private int port;
 		private String status;
 		private Date creationTime;
 		private Date endTime;
+		private ServerAuth auth;
+
+		public ServerStatus getStatus() {
+			switch (status) {
+			case "STARTING":
+				return ServerStatus.STARTING;
+			case "WAITING":
+				return ServerStatus.WAITING;
+			case "STARTED":
+				return ServerStatus.STARTED;
+			case "ENDING":
+				return ServerStatus.ENDING;
+			case "ENDED":
+			default:
+				return ServerStatus.ENDED;
+			}
+		}
 	}
 
 	public enum ServerStatus {
@@ -62,6 +81,26 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		 */
 		public static boolean isAfter(ServerStatus a, ServerStatus b) {
 			return b.ordinal() >= a.ordinal();
+		}
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServerAuth {
+		@SerializedName("client_id")
+		private String clientId;
+		@SerializedName("client_secret")
+		private String clientSecret;
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder("ServerDataOutput.ServerAuth(clientId=");
+			sb.append(clientId);
+			sb.append(", clientSecret=");
+			sb.append("<hidden>");
+			sb.append(")");
+			return sb.toString();
 		}
 	}
 }

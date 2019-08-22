@@ -1,10 +1,14 @@
 package com.froxynetwork.froxynetwork;
 
+import java.io.File;
+
 import com.froxynetwork.froxynetwork.network.NetworkManager;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
-import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.ServerStatus;
+import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput.Empty;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServersConfig;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
 
 /**
@@ -35,78 +39,83 @@ import com.froxynetwork.froxynetwork.network.service.ServiceManager;
 public class App {
 
 	public App() throws Exception {
+		// This is just for TESTING
+
 		// TODO URL in config file
-		String clientId = "WEBSOCKET_045cfff18fe0ab8393178e7b7826f227";
-		String clientSecret = "SECRET_ecfdc21a8d5022e2db64b1315b087aaf";
-		NetworkManager nm = new NetworkManager("http://localhost/", clientId, clientSecret);
+		String url = "https://localhost/";
+		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
+		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
+		NetworkManager nm = new NetworkManager(url, clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
-		// Add server
-		sm.getServerService().asyncAddServer("koth_1", 20001, new Callback<Server>() {
+		// Retrieve server configuration
+		sm.getServerConfigService().asyncGetServerConfig(new Callback<ServerConfigDataOutput.ServersConfig>() {
+
 			@Override
-			public void onResponse(Server server) {
-				System.out.println(server);
-				server.setStatus(ServerStatus.STARTED.name());
+			public void onResponse(ServersConfig response) {
+				System.out.println(response);
 				try {
-					System.out.println("Editing server");
-					Server editedServer = sm.getServerService().syncEditServer(server);
-					System.out.println("Deleting server");
-					sm.getServerService().syncDeleteServer(editedServer.getId());
-					sm.getServerService().asyncGetServer(editedServer.getId(), new Callback<Server>() {
-
-						@Override
-						public void onResponse(Server response) {
-							System.out.println(response);
-							sm.getServerService().asyncGetServer(999, new Callback<Server>() {
-
-								@Override
-								public void onResponse(Server response2) {
-									System.out.println(response2);
-									// Shutdown at the end
-									nm.shutdown();
-								};
-
-								@Override
-								public void onFailure(RestException ex) {
-									ex.printStackTrace();
-									// Shutdown at the end
-									nm.shutdown();
-								}
-
-								@Override
-								public void onFatalFailure(Throwable t) {
-									t.printStackTrace();
-									// Shutdown at the end
-									nm.shutdown();
-								}
-							});
-						};
-
-						@Override
-						public void onFailure(RestException ex) {
-							ex.printStackTrace();
-						}
-
-						@Override
-						public void onFatalFailure(Throwable t) {
-							t.printStackTrace();
-						}
-					});
-				} catch (RestException ex) {
-					ex.printStackTrace();
+					ServersConfig sc = sm.getServerConfigService().syncGetServerConfig("koth");
+					System.out.println(sc);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-			};
+				try {
+					ServersConfig sc = sm.getServerConfigService().syncGetServerConfig("koth_4players");
+					System.out.println(sc);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				// Download file
+				File outputDir = new File("G:\\User\\natha\\Desktop\\minecraft\\Servers\\Servers\\Src");
+				sm.getServerDownloadService().asyncDownloadServer("koth_4players",
+						new File(outputDir, "koth_4players.zip"), new Callback<EmptyDataOutput.Empty>() {
+
+							@Override
+							public void onResponse(Empty response) {
+								// Not exists
+								// Shutdown at the end
+								nm.shutdown();
+							}
+
+							@Override
+							public void onFailure(RestException ex) {
+								// Ok
+
+								try {
+									sm.getServerDownloadService().syncDownloadServer("koth",
+											new File(outputDir, "koth.zip"));
+									System.out.println("DONE");
+								} catch (RestException ex2) {
+									ex2.printStackTrace();
+								} catch (Exception ex2) {
+									ex2.printStackTrace();
+								}
+								// Shutdown at the end
+								nm.shutdown();
+							}
+
+							@Override
+							public void onFatalFailure(Throwable t) {
+								t.printStackTrace();
+								// Shutdown at the end
+								nm.shutdown();
+							}
+						});
+			}
 
 			@Override
 			public void onFailure(RestException ex) {
 				ex.printStackTrace();
+				// Shutdown at the end
+				nm.shutdown();
 			}
 
 			@Override
 			public void onFatalFailure(Throwable t) {
 				t.printStackTrace();
+				// Shutdown at the end
+				nm.shutdown();
 			}
 		});
 	}
