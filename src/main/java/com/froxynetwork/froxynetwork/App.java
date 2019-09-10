@@ -10,6 +10,7 @@ import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput.Empty;
 import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput.ServersConfig;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
+import com.froxynetwork.froxynetwork.network.websocket.WebSocketManager;
 
 /**
  * MIT License
@@ -37,6 +38,8 @@ import com.froxynetwork.froxynetwork.network.service.ServiceManager;
  * @author 0ddlyoko
  */
 public class App {
+	private NetworkManager nm;
+	private WebSocketManager wsm;
 
 	public App() throws Exception {
 		// This is just for TESTING
@@ -45,7 +48,8 @@ public class App {
 		String url = "https://localhost/";
 		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
 		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
-		NetworkManager nm = new NetworkManager(url, clientId, clientSecret);
+		wsm = new WebSocketManager("wss://localhost");
+		nm = new NetworkManager(url, clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
 		// Retrieve server configuration
@@ -75,7 +79,7 @@ public class App {
 							public void onResponse(Empty response) {
 								// Not exists
 								// Shutdown at the end
-								nm.shutdown();
+								stop();
 							}
 
 							@Override
@@ -92,14 +96,14 @@ public class App {
 									ex2.printStackTrace();
 								}
 								// Shutdown at the end
-								nm.shutdown();
+								stop();
 							}
 
 							@Override
 							public void onFatalFailure(Throwable t) {
 								t.printStackTrace();
 								// Shutdown at the end
-								nm.shutdown();
+								stop();
 							}
 						});
 			}
@@ -108,16 +112,23 @@ public class App {
 			public void onFailure(RestException ex) {
 				ex.printStackTrace();
 				// Shutdown at the end
-				nm.shutdown();
+				stop();
 			}
 
 			@Override
 			public void onFatalFailure(Throwable t) {
 				t.printStackTrace();
 				// Shutdown at the end
-				nm.shutdown();
+				stop();
 			}
 		});
+	}
+
+	private void stop() {
+		if (nm != null)
+			nm.shutdown();
+		if (wsm != null)
+			wsm.disconnect();
 	}
 
 	public static void main(String[] args) throws Exception {
