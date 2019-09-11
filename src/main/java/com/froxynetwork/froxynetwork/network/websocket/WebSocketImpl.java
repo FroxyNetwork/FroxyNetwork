@@ -92,6 +92,11 @@ public class WebSocketImpl implements IWebSocket {
 					r.accept(remote);
 			}
 		};
+	}
+
+	@Override
+	public void connect() {
+		LOG.info("Connecting ...");
 		client.connect();
 	}
 
@@ -113,7 +118,7 @@ public class WebSocketImpl implements IWebSocket {
 				} catch (InterruptedException ex) {
 				}
 			}
-			client.connect();
+			connect();
 		}, "WebSocketImpl-Reconnect").start();
 	}
 

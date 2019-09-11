@@ -55,6 +55,11 @@ public class WebSocketManager implements IWebSocket {
 	}
 
 	@Override
+	public void connect() {
+		webSocket.connect();
+	}
+
+	@Override
 	public boolean isConnected() {
 		return webSocket.isConnected();
 	}

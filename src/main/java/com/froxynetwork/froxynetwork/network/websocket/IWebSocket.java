@@ -37,6 +37,11 @@ public interface IWebSocket {
 	public boolean isConnected();
 
 	/**
+	 * Connect to the server
+	 */
+	public void connect();
+
+	/**
 	 * Disconnect if already connected and reconnect again
 	 */
 	public void reconnect();

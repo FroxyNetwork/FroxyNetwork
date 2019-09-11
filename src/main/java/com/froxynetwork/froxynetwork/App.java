@@ -48,7 +48,7 @@ public class App {
 		String url = "https://localhost/";
 		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
 		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
-		wsm = new WebSocketManager("wss://localhost");
+		wsm = new WebSocketManager("ws://localhost");
 		nm = new NetworkManager(url, clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
@@ -122,6 +122,8 @@ public class App {
 				stop();
 			}
 		});
+		// Connect to the WebSocket
+		wsm.connect();
 	}
 
 	private void stop() {
