@@ -45,7 +45,7 @@ public class WebSocketManager implements IWebSocket {
 		this.url = url;
 	}
 
-	public WebSocketManager(IWebSocket webSocket, String url) throws URISyntaxException {
+	public WebSocketManager(IWebSocket webSocket, String url) {
 		this.webSocket = webSocket;
 		this.url = url;
 	}
