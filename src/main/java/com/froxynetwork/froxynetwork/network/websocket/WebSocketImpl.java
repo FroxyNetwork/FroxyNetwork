@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.java_websocket.client.WebSocketClient;
@@ -46,7 +47,7 @@ public class WebSocketImpl implements IWebSocket {
 
 	private List<Consumer<Boolean>> listenerConnection;
 	private List<Consumer<Boolean>> listenerDisconnection;
-	private HashMap<String, List<Consumer<String>>> listeners;
+	private HashMap<String, List<BiConsumer<String, String>>> listeners;
 	private boolean firstConnection = true;
 
 	public WebSocketImpl(String url) throws URISyntaxException {
@@ -72,12 +73,19 @@ public class WebSocketImpl implements IWebSocket {
 					return;
 				LOG.debug("Got message {}", message);
 				String[] split = message.split(" ");
-				String channel = split[0];
+				if (split.length < 2) {
+					// Error
+					LOG.warn("Ignoring message {}", message);
+				}
+				String srv = split[0];
+				String channel = split[1];
 				String msg = "";
-				if (split.length > 1)
-					msg = String.join(" ", Arrays.copyOfRange(split, 1, split.length - 1));
-				for (Consumer<String> consumer : listeners.get(channel))
-					consumer.accept(msg);
+				if (split.length > 2)
+					msg = String.join(" ", Arrays.copyOfRange(split, 2, split.length));
+				if (!listeners.containsKey(channel))
+					return;
+				for (BiConsumer<String, String> consumer : listeners.get(channel))
+					consumer.accept(srv, msg);
 			}
 
 			@Override
@@ -160,8 +168,8 @@ public class WebSocketImpl implements IWebSocket {
 	}
 
 	@Override
-	public void addChannelListener(String channel, Consumer<String> listener) {
-		List<Consumer<String>> list = listeners.getOrDefault(channel, new ArrayList<>());
+	public void addChannelListener(String channel, BiConsumer<String, String> listener) {
+		List<BiConsumer<String, String>> list = listeners.getOrDefault(channel, new ArrayList<>());
 		if (list.contains(listener))
 			return;
 		list.add(listener);
@@ -169,8 +177,8 @@ public class WebSocketImpl implements IWebSocket {
 	}
 
 	@Override
-	public void removeChannelListener(String channel, Consumer<String> listener) {
-		List<Consumer<String>> list = listeners.getOrDefault(channel, new ArrayList<>());
+	public void removeChannelListener(String channel, BiConsumer<String, String> listener) {
+		List<BiConsumer<String, String>> list = listeners.getOrDefault(channel, new ArrayList<>());
 		list.remove(listener);
 		listeners.put(channel, list);
 	}

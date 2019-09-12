@@ -1,5 +1,6 @@
 package com.froxynetwork.froxynetwork.network.websocket;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.java_websocket.enums.ReadyState;
@@ -106,9 +107,10 @@ public interface IWebSocket {
 	 * @param channel
 	 *            The channel
 	 * @param listener
-	 *            The listener
+	 *            The listener. First parameter is the name of the original server
+	 *            (or "MAIN" if ServerManager) and second is the message.
 	 */
-	public void addChannelListener(String channel, Consumer<String> listener);
+	public void addChannelListener(String channel, BiConsumer<String, String> listener);
 
 	/**
 	 * Remove listener when incoming message
@@ -118,7 +120,7 @@ public interface IWebSocket {
 	 * @param listener
 	 *            The listener to remove
 	 */
-	public void removeChannelListener(String channel, Consumer<String> listener);
+	public void removeChannelListener(String channel, BiConsumer<String, String> listener);
 
 	/**
 	 * Remove all listeners for specific channel when incoming message
