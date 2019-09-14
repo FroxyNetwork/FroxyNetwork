@@ -1,7 +1,8 @@
-package com.froxynetwork.froxynetwork.network.service;
+package com.froxynetwork.froxynetwork.network.output.data;
 
-import lombok.Getter;
-import retrofit2.Retrofit;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * MIT License
@@ -28,28 +29,12 @@ import retrofit2.Retrofit;
  * 
  * @author 0ddlyoko
  */
-public final class ServiceManager {
+public class ServerTesterDataOutput extends GeneralDataOutput<ServerTesterDataOutput.ServerTester> {
 
-	@Getter
-	private PlayerService playerService;
-
-	@Getter
-	private ServerService serverService;
-
-	@Getter
-	private ServerConfigService serverConfigService;
-
-	@Getter
-	private ServerDownloadService serverDownloadService;
-
-	@Getter
-	private ServerTesterService serverTesterService;
-
-	public ServiceManager(Retrofit retrofit) {
-		playerService = new PlayerService(retrofit);
-		serverService = new ServerService(retrofit);
-		serverConfigService = new ServerConfigService(retrofit);
-		serverDownloadService = new ServerDownloadService(retrofit);
-		serverTesterService = new ServerTesterService(retrofit);
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServerTester {
+		private boolean ok;
 	}
 }

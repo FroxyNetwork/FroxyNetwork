@@ -92,7 +92,7 @@ public interface IWebSocket {
 	public ReadyState getConnectionState();
 
 	/**
-	 * Send a message to specific channel
+	 * Send a message to specific server
 	 * 
 	 * @param channel
 	 *            The channel
