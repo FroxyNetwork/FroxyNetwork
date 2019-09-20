@@ -103,18 +103,36 @@ public class WebSocketImpl implements IWebSocket {
 	}
 
 	@Override
-	public void connect() {
-		LOG.info("Connecting ...");
-		client.connect();
-	}
-
-	@Override
 	public boolean isConnected() {
 		return client.isOpen();
 	}
 
 	@Override
-	public void reconnect() {
+	public void connect(String id, String clientId, String token) {
+		LOG.info("Connecting ...");
+		new Thread(() -> {
+			try {
+				// We'll try 10 times to connect to the WebSocket
+				boolean ok = false;
+				for (int i = 1; i <= 10 && !ok; i++) {
+					LOG.info("Trying to connection #{}", i);
+					ok = client.connectBlocking();
+				}
+				if (ok) {
+					// Connected, sending an authentication request
+					sendChannelMessage("auth", id + " " + clientId + " " + token);
+				} else {
+					// TODO Find something to execute if not connected
+					LOG.error("Cannot connect to the WebSocket !");
+				}
+			} catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}, "WebSocketImpl-Connect").start();
+	}
+
+	@Override
+	public void reconnect(String id, String clientId, String token) {
 		// Async
 		new Thread(() -> {
 			LOG.info("Reconnecting ...");
@@ -126,7 +144,7 @@ public class WebSocketImpl implements IWebSocket {
 				} catch (InterruptedException ex) {
 				}
 			}
-			connect();
+			connect(id, clientId, token);
 		}, "WebSocketImpl-Reconnect").start();
 	}
 

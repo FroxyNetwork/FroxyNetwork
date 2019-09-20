@@ -52,29 +52,30 @@ public class App {
 		String clientIdTester = "";
 		String tokenTester = "def019ee9f4af62223d9f81ae86e5f8a6c78431e";
 
-		sm.getServerTesterService().asyncCheckServer(idTester, clientIdTester, tokenTester, new Callback<ServerTesterDataOutput.ServerTester>() {
+		sm.getServerTesterService().asyncCheckServer(idTester, clientIdTester, tokenTester,
+				new Callback<ServerTesterDataOutput.ServerTester>() {
 
-			@Override
-			public void onResponse(ServerTester response) {
-				System.out.println("Isok ? " + response.isOk());
-				// Shutdown at the end
-				stop();
-			}
+					@Override
+					public void onResponse(ServerTester response) {
+						System.out.println("Isok ? " + response.isOk());
+						// Shutdown at the end
+						stop();
+					}
 
-			@Override
-			public void onFailure(RestException ex) {
-				ex.printStackTrace();
-				// Shutdown at the end
-				stop();
-			}
+					@Override
+					public void onFailure(RestException ex) {
+						ex.printStackTrace();
+						// Shutdown at the end
+						stop();
+					}
 
-			@Override
-			public void onFatalFailure(Throwable t) {
-				t.printStackTrace();
-				// Shutdown at the end
-				stop();
-			}
-		});
+					@Override
+					public void onFatalFailure(Throwable t) {
+						t.printStackTrace();
+						// Shutdown at the end
+						stop();
+					}
+				});
 	}
 
 	private void stop() {

@@ -38,14 +38,37 @@ public interface IWebSocket {
 	public boolean isConnected();
 
 	/**
-	 * Connect to the server
+	 * Connect to the server.<br />
+	 * This method create a new Thread so it can end without being connected to the
+	 * WebSocket.
+	 * 
+	 * @see #registerWebSocketConnection(Consumer)
+	 * 
+	 * @param id
+	 *            The id of the server
+	 * @param clientId
+	 *            The client_id of the server
+	 * @param token
+	 *            The token of the server
 	 */
-	public void connect();
+	public void connect(String id, String clientId, String token);
 
 	/**
-	 * Disconnect if already connected and reconnect again
+	 * Disconnect if already connected and reconnect again.<br />
+	 * This method create a new Thread so it can end without being connected to the
+	 * WebSocket.
+	 * 
+	 * @see #registerWebSocketDisconnection(Consumer)
+	 * @see #registerWebSocketConnection(Consumer)
+	 * 
+	 * @param id
+	 *            The id of the server
+	 * @param clientId
+	 *            The client_id of the server
+	 * @param token
+	 *            The token of the server
 	 */
-	public void reconnect();
+	public void reconnect(String id, String clientId, String token);
 
 	/**
 	 * Disconnect if already connected
