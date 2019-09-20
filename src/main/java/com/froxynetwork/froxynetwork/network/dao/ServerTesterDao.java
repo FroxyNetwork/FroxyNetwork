@@ -42,5 +42,5 @@ public interface ServerTesterDao {
 	 * @return Specific server if exists
 	 */
 	@GET("server/tester/{id}")
-	public Call<ServerTesterDataOutput> checkServer(@Path("id") String id, @Query("token") String token);
+	public Call<ServerTesterDataOutput> checkServer(@Path("id") String id, @Query("client_id") String clientId, @Query("token") String token);
 }

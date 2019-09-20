@@ -48,10 +48,11 @@ public class App {
 		nm = new NetworkManager(url, clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
-		String id = "CLIENT_KOTH_4c72fb1d585c25dfcaf5fdbb218eed87";
-		String token = "def019ee9f4af62223d9f81ae86e5f8a6c78431e";
+		String idTester = "CLIENT_KOTH_4c72fb1d585c25dfcaf5fdbb218eed87";
+		String clientIdTester = "";
+		String tokenTester = "def019ee9f4af62223d9f81ae86e5f8a6c78431e";
 
-		sm.getServerTesterService().asyncCheckServer(id, token, new Callback<ServerTesterDataOutput.ServerTester>() {
+		sm.getServerTesterService().asyncCheckServer(idTester, clientIdTester, tokenTester, new Callback<ServerTesterDataOutput.ServerTester>() {
 
 			@Override
 			public void onResponse(ServerTester response) {
