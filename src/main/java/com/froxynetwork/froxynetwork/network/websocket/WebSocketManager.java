@@ -86,6 +86,16 @@ public class WebSocketManager implements IWebSocket {
 	}
 
 	@Override
+	public void registerWebSocketAuthentified(Runnable run) {
+		webSocket.registerWebSocketAuthentified(run);
+	}
+
+	@Override
+	public void unregisterWebSocketAuthentified(Runnable run) {
+		webSocket.unregisterWebSocketAuthentified(run);
+	}
+
+	@Override
 	public void registerWebSocketDisconnection(Consumer<Boolean> run) {
 		webSocket.registerWebSocketDisconnection(run);
 	}

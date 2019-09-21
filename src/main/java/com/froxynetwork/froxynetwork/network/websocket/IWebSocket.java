@@ -93,8 +93,24 @@ public interface IWebSocket {
 	public void unregisterWebSocketConnection(Consumer<Boolean> run);
 
 	/**
-	 * Register an event that is called when the app is disconnected to the
-	 * WebSocket
+	 * Register an event that is called when the app is connected and authentified
+	 * to the WebSocket
+	 * 
+	 * @param run
+	 *            The action to execute.
+	 */
+	public void registerWebSocketAuthentified(Runnable run);
+
+	/**
+	 * Unregister the registered event
+	 * 
+	 * @param run
+	 */
+	public void unregisterWebSocketAuthentified(Runnable run);
+
+	/**
+	 * Register an event that is called when the app is connected and authentified
+	 * to the WebSocket
 	 * 
 	 * @param run
 	 *            The action to execute. Parameter depends on the closing of the

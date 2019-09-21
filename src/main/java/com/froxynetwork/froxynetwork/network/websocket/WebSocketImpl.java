@@ -47,6 +47,8 @@ public class WebSocketImpl implements IWebSocket {
 
 	private List<Consumer<Boolean>> listenerConnection;
 	private List<Consumer<Boolean>> listenerDisconnection;
+	private List<Runnable> listenerAuthentified;
+	private boolean authentified;
 	private HashMap<String, List<BiConsumer<String, String>>> listeners;
 	private boolean firstConnection = true;
 
@@ -54,6 +56,7 @@ public class WebSocketImpl implements IWebSocket {
 		this.url = url;
 		this.listenerConnection = new ArrayList<>();
 		this.listenerDisconnection = new ArrayList<>();
+		this.listenerAuthentified = new ArrayList<>();
 		this.listeners = new HashMap<>();
 		URI uri = new URI(url);
 		client = new WebSocketClient(uri) {
@@ -82,6 +85,18 @@ public class WebSocketImpl implements IWebSocket {
 				String msg = "";
 				if (split.length > 2)
 					msg = String.join(" ", Arrays.copyOfRange(split, 2, split.length));
+				if ("MAIN".equalsIgnoreCase(srv) && "connection".equalsIgnoreCase(channel)
+						&& "ok".equalsIgnoreCase(msg)) {
+					// The app is authentified
+					if (!authentified) {
+						authentified = true;
+						if (listenerAuthentified.size() == 0)
+							return;
+						for (Runnable run : listenerAuthentified)
+							run.run();
+						return;
+					}
+				}
 				if (!listeners.containsKey(channel))
 					return;
 				for (BiConsumer<String, String> consumer : listeners.get(channel))
@@ -96,6 +111,8 @@ public class WebSocketImpl implements IWebSocket {
 			@Override
 			public void onClose(int code, String reason, boolean remote) {
 				LOG.info("WebSocket closed, code = {}, reason = {}, remote = {}", code, reason, remote);
+				listeners = new HashMap<>();
+				authentified = false;
 				for (Consumer<Boolean> r : listenerDisconnection)
 					r.accept(remote);
 			}
@@ -162,6 +179,17 @@ public class WebSocketImpl implements IWebSocket {
 	@Override
 	public void unregisterWebSocketConnection(Consumer<Boolean> run) {
 		listenerConnection.remove(run);
+	}
+
+	@Override
+	public void registerWebSocketAuthentified(Runnable run) {
+		if (!listenerAuthentified.contains(run))
+			listenerAuthentified.add(run);
+	}
+
+	@Override
+	public void unregisterWebSocketAuthentified(Runnable run) {
+		listenerAuthentified.remove(run);
 	}
 
 	@Override
