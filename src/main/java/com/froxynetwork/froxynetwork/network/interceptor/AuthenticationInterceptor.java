@@ -130,4 +130,8 @@ public class AuthenticationInterceptor implements Interceptor {
 		// TODO Find a better Exception
 		throw new IllegalStateException("Cannot retrieve a new Authentication Token !");
 	}
+
+	public String getToken() {
+		return token;
+	}
 }

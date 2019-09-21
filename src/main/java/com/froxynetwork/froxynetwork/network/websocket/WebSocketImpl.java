@@ -115,7 +115,7 @@ public class WebSocketImpl implements IWebSocket {
 				// We'll try 10 times to connect to the WebSocket
 				boolean ok = false;
 				for (int i = 1; i <= 10 && !ok; i++) {
-					LOG.info("Trying to connection #{}", i);
+					LOG.info("Trying to connect #{}", i);
 					ok = client.connectBlocking();
 				}
 				if (ok) {
@@ -123,7 +123,7 @@ public class WebSocketImpl implements IWebSocket {
 					sendChannelMessage("auth", id + " " + clientId + " " + token);
 				} else {
 					// TODO Find something to execute if not connected
-					LOG.error("Cannot connect to the WebSocket !");
+					LOG.error("Connection failed !");
 				}
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
