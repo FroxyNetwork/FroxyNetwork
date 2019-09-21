@@ -76,4 +76,8 @@ public final class NetworkManager {
 	public String getAuthenticationToken() {
 		return authenticationInterceptor.getToken();
 	}
+	
+	public boolean isTokenExpired() {
+		return authenticationInterceptor.isTokenExpired();
+	}
 }

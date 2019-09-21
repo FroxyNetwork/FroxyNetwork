@@ -56,8 +56,8 @@ public class WebSocketManager implements IWebSocket {
 	}
 
 	@Override
-	public void connect(String id, String client_id, String token) {
-		webSocket.connect(id, client_id, token);
+	public void connect(String id, String clientId, String token) {
+		webSocket.connect(id, clientId, token);
 	}
 
 	@Override
@@ -66,8 +66,8 @@ public class WebSocketManager implements IWebSocket {
 	}
 
 	@Override
-	public void reconnect(String id, String client_id, String token) {
-		webSocket.reconnect(id, client_id, token);
+	public void reconnect(String id, String clientId, String token) {
+		webSocket.reconnect(id, clientId, token);
 	}
 
 	@Override

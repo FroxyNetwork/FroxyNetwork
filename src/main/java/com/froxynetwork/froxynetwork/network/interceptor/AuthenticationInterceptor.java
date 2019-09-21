@@ -134,4 +134,11 @@ public class AuthenticationInterceptor implements Interceptor {
 	public String getToken() {
 		return token;
 	}
+
+	/**
+	 * @return true if the token is expired
+	 */
+	public boolean isTokenExpired() {
+		return expirationDate == null || expirationDate.before(new Date());
+	}
 }
