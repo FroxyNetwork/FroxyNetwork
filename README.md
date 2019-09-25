@@ -8,6 +8,7 @@ Ce dépôt contient les sources et la documentation pour la partie FroxyNetwork.
 - [lombok](https://github.com/rzwitserloot/lombok)
 - [gson](https://github.com/google/gson)
 - [retrofit](https://github.com/square/retrofit)
+- [Java-WebSocket](https://github.com/TooTallNate/Java-WebSocket/)
 
 ## License
 This software is available under the following licenses:
