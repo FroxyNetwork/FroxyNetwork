@@ -6,6 +6,8 @@
             https://www.slf4j.org/
         - lombok, Copyright (C) 2009-2015 The Project Lombok Authors.
             https://github.com/rzwitserloot/lombok
+        - Java-WebSocket, Copyright (c) 2010-2019 Nathan Rajlich.
+            https://github.com/TooTallNate/Java-WebSocket
 
 -----------------------------------------------------------------------------
 
