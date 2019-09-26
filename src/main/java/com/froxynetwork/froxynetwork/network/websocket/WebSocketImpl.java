@@ -150,7 +150,10 @@ public class WebSocketImpl implements IWebSocket {
 				client = client();
 				for (int i = 1; i <= 10 && !ok; i++) {
 					LOG.info("Trying to connect #{}", i);
-					ok = client.connectBlocking();
+					if (i == 1)
+						ok = client.connectBlocking();
+					else
+						ok = client.reconnectBlocking();
 				}
 				if (ok) {
 					// Connected, sending an authentication request
