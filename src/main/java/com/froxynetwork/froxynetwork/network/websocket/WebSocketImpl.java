@@ -131,6 +131,9 @@ public class WebSocketImpl implements IWebSocket {
 
 	@Override
 	public void connect(String id, String clientId, String token) {
+		// We don't want to reconnect if we're already connected
+		if (isConnected())
+			return;
 		LOG.info("Connecting ...");
 		new Thread(() -> {
 			try {
