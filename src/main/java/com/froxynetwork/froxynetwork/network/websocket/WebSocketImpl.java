@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 public class WebSocketImpl implements IWebSocket {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	private String url;
+	private URI uri;
 	private WebSocketClient client;
 
 	private List<Consumer<Boolean>> listenerConnection;
@@ -58,8 +59,11 @@ public class WebSocketImpl implements IWebSocket {
 		this.listenerDisconnection = new ArrayList<>();
 		this.listenerAuthentified = new ArrayList<>();
 		this.listeners = new HashMap<>();
-		URI uri = new URI(url);
-		client = new WebSocketClient(uri) {
+		uri = new URI(url);
+	}
+
+	private WebSocketClient client() {
+		return new WebSocketClient(uri) {
 
 			@Override
 			public void onOpen(ServerHandshake handshakedata) {
@@ -121,7 +125,7 @@ public class WebSocketImpl implements IWebSocket {
 
 	@Override
 	public boolean isConnected() {
-		return client.isOpen();
+		return client != null && client.isOpen();
 	}
 
 	@Override
@@ -129,19 +133,24 @@ public class WebSocketImpl implements IWebSocket {
 		return isConnected() && authentified;
 	}
 
+	private Thread t;
+
 	@Override
 	public void connect(String id, String clientId, String token) {
 		// We don't want to reconnect if we're already connected
 		if (isConnected())
 			return;
 		LOG.info("Connecting ...");
-		new Thread(() -> {
+		if (t != null && t.isAlive())
+			t.interrupt();
+		t = new Thread(() -> {
 			try {
 				// We'll try 10 times to connect to the WebSocket
 				boolean ok = false;
+				client = client();
 				for (int i = 1; i <= 10 && !ok; i++) {
 					LOG.info("Trying to connect #{}", i);
-					ok = client.reconnectBlocking();
+					ok = client.connectBlocking();
 				}
 				if (ok) {
 					// Connected, sending an authentication request
@@ -153,7 +162,8 @@ public class WebSocketImpl implements IWebSocket {
 			} catch (InterruptedException ex) {
 				ex.printStackTrace();
 			}
-		}, "WebSocketImpl-Connect").start();
+		}, "WebSocketImpl-Connect");
+		t.start();
 	}
 
 	@Override
