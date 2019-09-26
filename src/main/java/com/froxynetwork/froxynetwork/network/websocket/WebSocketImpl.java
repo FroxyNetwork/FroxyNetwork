@@ -141,7 +141,7 @@ public class WebSocketImpl implements IWebSocket {
 				boolean ok = false;
 				for (int i = 1; i <= 10 && !ok; i++) {
 					LOG.info("Trying to connect #{}", i);
-					ok = client.connectBlocking();
+					ok = client.reconnectBlocking();
 				}
 				if (ok) {
 					// Connected, sending an authentication request
