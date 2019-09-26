@@ -44,8 +44,7 @@ public interface IWebSocket {
 
 	/**
 	 * Connect to the server.<br />
-	 * This method create a new Thread so it can end without being connected to the
-	 * WebSocket.
+	 * This method create a new Thread
 	 * 
 	 * @see #registerWebSocketConnection(Consumer)
 	 * 
@@ -60,8 +59,7 @@ public interface IWebSocket {
 
 	/**
 	 * Disconnect if already connected and reconnect again.<br />
-	 * This method create a new Thread so it can end without being connected to the
-	 * WebSocket.
+	 * This method create a new Thread
 	 * 
 	 * @see #registerWebSocketDisconnection(Consumer)
 	 * @see #registerWebSocketConnection(Consumer)
