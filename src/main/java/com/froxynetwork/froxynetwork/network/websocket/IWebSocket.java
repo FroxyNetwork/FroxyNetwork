@@ -38,6 +38,11 @@ public interface IWebSocket {
 	public boolean isConnected();
 
 	/**
+	 * @return true if the app is connected and authentified
+	 */
+	public boolean isAuthentified();
+
+	/**
 	 * Connect to the server.<br />
 	 * This method create a new Thread so it can end without being connected to the
 	 * WebSocket.

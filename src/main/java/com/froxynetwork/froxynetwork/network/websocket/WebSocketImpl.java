@@ -125,6 +125,11 @@ public class WebSocketImpl implements IWebSocket {
 	}
 
 	@Override
+	public boolean isAuthentified() {
+		return isConnected() && authentified;
+	}
+
+	@Override
 	public void connect(String id, String clientId, String token) {
 		LOG.info("Connecting ...");
 		new Thread(() -> {

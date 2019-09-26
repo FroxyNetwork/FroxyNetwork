@@ -64,6 +64,11 @@ public class WebSocketManager implements IWebSocket {
 	public boolean isConnected() {
 		return webSocket.isConnected();
 	}
+	
+	@Override
+	public boolean isAuthentified() {
+		return webSocket.isAuthentified();
+	}
 
 	@Override
 	public void reconnect(String id, String clientId, String token) {
