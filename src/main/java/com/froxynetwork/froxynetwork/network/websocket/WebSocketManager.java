@@ -41,12 +41,12 @@ public class WebSocketManager implements IWebSocket {
 	private IWebSocket webSocket;
 	private String url;
 
-	public WebSocketManager(String url) throws URISyntaxException {
-		webSocket = new WebSocketImpl(url);
+	public WebSocketManager(String url, CustomInteraction customInteraction) throws URISyntaxException {
+		webSocket = new WebSocketImpl(url, customInteraction);
 		this.url = url;
 	}
 
-	public WebSocketManager(IWebSocket webSocket, String url) {
+	public WebSocketManager(IWebSocket webSocket, String url, CustomInteraction customInteraction) {
 		this.webSocket = webSocket;
 		this.url = url;
 	}
@@ -64,7 +64,7 @@ public class WebSocketManager implements IWebSocket {
 	public boolean isConnected() {
 		return webSocket.isConnected();
 	}
-	
+
 	@Override
 	public boolean isAuthentified() {
 		return webSocket.isAuthentified();

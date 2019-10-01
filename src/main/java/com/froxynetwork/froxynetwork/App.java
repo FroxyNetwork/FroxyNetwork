@@ -1,11 +1,15 @@
 package com.froxynetwork.froxynetwork;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.froxynetwork.froxynetwork.network.NetworkManager;
 import com.froxynetwork.froxynetwork.network.output.Callback;
 import com.froxynetwork.froxynetwork.network.output.RestException;
 import com.froxynetwork.froxynetwork.network.output.data.ServerTesterDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.ServerTesterDataOutput.ServerTester;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
+import com.froxynetwork.froxynetwork.network.websocket.CustomInteraction;
 import com.froxynetwork.froxynetwork.network.websocket.WebSocketManager;
 
 /**
@@ -34,8 +38,11 @@ import com.froxynetwork.froxynetwork.network.websocket.WebSocketManager;
  * @author 0ddlyoko
  */
 public class App {
+	private Logger LOG = LoggerFactory.getLogger(getClass());
+
 	private NetworkManager nm;
 	private WebSocketManager wsm;
+	private CustomInteraction customInteraction;
 
 	public App() throws Exception {
 		// This is just for TESTING
@@ -44,7 +51,8 @@ public class App {
 		String url = "http://localhost/";
 		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
 		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
-		wsm = new WebSocketManager("ws://localhost");
+		initCustomInteraction();
+		wsm = new WebSocketManager("ws://localhost", customInteraction);
 		nm = new NetworkManager(url, clientId, clientSecret);
 		ServiceManager sm = nm.getNetwork();
 
@@ -83,6 +91,17 @@ public class App {
 			nm.shutdown();
 		if (wsm != null)
 			wsm.disconnect();
+	}
+
+	private void initCustomInteraction() {
+		customInteraction = new CustomInteraction() {
+
+			@Override
+			public void stop(String msg) {
+				// Nothing to do here
+				LOG.info("stop({})", msg);
+			}
+		};
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -44,6 +44,7 @@ public class WebSocketImpl implements IWebSocket {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	private String url;
 	private URI uri;
+	private CustomInteraction customInteraction;
 	private WebSocketClient client;
 
 	private List<Consumer<Boolean>> listenerConnection;
@@ -53,8 +54,9 @@ public class WebSocketImpl implements IWebSocket {
 	private HashMap<String, List<BiConsumer<String, String>>> listeners;
 	private boolean firstConnection = true;
 
-	public WebSocketImpl(String url) throws URISyntaxException {
+	public WebSocketImpl(String url, CustomInteraction customInteraction) throws URISyntaxException {
 		this.url = url;
+		this.customInteraction = customInteraction;
 		this.listenerConnection = new ArrayList<>();
 		this.listenerDisconnection = new ArrayList<>();
 		this.listenerAuthentified = new ArrayList<>();
@@ -89,22 +91,12 @@ public class WebSocketImpl implements IWebSocket {
 				String msg = "";
 				if (split.length > 2)
 					msg = String.join(" ", Arrays.copyOfRange(split, 2, split.length));
-				if ("MAIN".equalsIgnoreCase(srv) && "connection".equalsIgnoreCase(channel)
-						&& "ok".equalsIgnoreCase(msg)) {
-					// The app is authentified
-					if (!authentified) {
-						authentified = true;
-						if (listenerAuthentified.size() == 0)
-							return;
-						for (Runnable run : listenerAuthentified)
-							run.run();
+				if (!handleCommand(srv, channel, msg)) {
+					if (!listeners.containsKey(channel))
 						return;
-					}
+					for (BiConsumer<String, String> consumer : listeners.get(channel))
+						consumer.accept(srv, msg);
 				}
-				if (!listeners.containsKey(channel))
-					return;
-				for (BiConsumer<String, String> consumer : listeners.get(channel))
-					consumer.accept(srv, msg);
 			}
 
 			@Override
@@ -253,5 +245,35 @@ public class WebSocketImpl implements IWebSocket {
 	@Override
 	public void removeChannelListener(String channel) {
 		listeners.remove(channel);
+	}
+
+	/**
+	 * Method used for internal operation
+	 * 
+	 * @param server
+	 * @param channel
+	 * @param msg
+	 * @return true if command is for internal operation
+	 */
+	private boolean handleCommand(String server, String channel, String msg) {
+		if ("MAIN".equalsIgnoreCase(server) && "connection".equalsIgnoreCase(channel)) {
+			if ("ok".equalsIgnoreCase(msg)) {
+				// The app is authentified
+				if (!authentified) {
+					authentified = true;
+					if (listenerAuthentified.size() == 0)
+						return true;
+					for (Runnable run : listenerAuthentified)
+						run.run();
+					return true;
+				}
+			}
+		} else if ("MAIN".equalsIgnoreCase(server) && "stop".equalsIgnoreCase(channel)) {
+			// Stop the server
+			customInteraction.stop(msg);
+			return true;
+		}
+
+		return false;
 	}
 }
