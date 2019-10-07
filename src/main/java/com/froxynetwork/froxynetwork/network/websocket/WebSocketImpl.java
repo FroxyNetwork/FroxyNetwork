@@ -149,7 +149,10 @@ public class WebSocketImpl implements IWebSocket {
 				}
 				if (ok) {
 					// Connected, sending an authentication request
-					sendChannelMessage("auth", id + " " + clientId + " " + token);
+					String identifiers = id;
+					if (clientId != null)
+						identifiers += " " + clientId;
+					sendChannelMessage("auth", identifiers + " " + token);
 				} else {
 					// TODO Find something to execute if not connected
 					LOG.error("Connection failed !");
