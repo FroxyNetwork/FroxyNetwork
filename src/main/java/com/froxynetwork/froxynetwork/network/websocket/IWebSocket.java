@@ -1,6 +1,5 @@
 package com.froxynetwork.froxynetwork.network.websocket;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.java_websocket.enums.ReadyState;
@@ -144,31 +143,25 @@ public interface IWebSocket {
 	public void sendChannelMessage(String channel, String message);
 
 	/**
-	 * Add listener when incoming message
-	 * 
-	 * @param channel
-	 *            The channel
-	 * @param listener
-	 *            The listener. First parameter is the name of the original server
-	 *            (or "MAIN" if ServerManager) and second is the message.
-	 */
-	public void addChannelListener(String channel, BiConsumer<String, String> listener);
-
-	/**
-	 * Remove listener when incoming message
-	 * 
-	 * @param channel
-	 *            The channel
-	 * @param listener
-	 *            The listener to remove
-	 */
-	public void removeChannelListener(String channel, BiConsumer<String, String> listener);
-
-	/**
 	 * Remove all listeners for specific channel when incoming message
 	 * 
-	 * @param channel
-	 *            The channel
+	 * @param channel The channel
 	 */
 	public void removeChannelListener(String channel);
+
+	/**
+	 * Register a new handler for a specific command received via WebSocket
+	 * 
+	 * @param commander 
+	 *            The commander
+	 */
+	public void registerCommand(IWebSocketCommander commander);
+
+	/**
+	 * Unregister a registered command handler
+	 * 
+	 * @param commander
+	 *            The commander
+	 */
+	public void unregisterCommand(IWebSocketCommander commander);
 }

@@ -1,7 +1,6 @@
 package com.froxynetwork.froxynetwork.network.websocket;
 
 import java.net.URISyntaxException;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.java_websocket.enums.ReadyState;
@@ -121,17 +120,17 @@ public class WebSocketManager implements IWebSocket {
 	}
 
 	@Override
-	public void addChannelListener(String channel, BiConsumer<String, String> listener) {
-		webSocket.addChannelListener(channel, listener);
-	}
-
-	@Override
-	public void removeChannelListener(String channel, BiConsumer<String, String> listener) {
-		webSocket.removeChannelListener(channel, listener);
-	}
-
-	@Override
 	public void removeChannelListener(String channel) {
 		webSocket.removeChannelListener(channel);
+	}
+
+	@Override
+	public void registerCommand(IWebSocketCommander commander) {
+		webSocket.registerCommand(commander);
+	}
+
+	@Override
+	public void unregisterCommand(IWebSocketCommander commander) {
+		webSocket.unregisterCommand(commander);
 	}
 }

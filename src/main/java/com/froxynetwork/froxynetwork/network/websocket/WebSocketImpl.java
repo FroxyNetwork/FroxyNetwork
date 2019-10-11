@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.java_websocket.client.WebSocketClient;
@@ -14,6 +13,8 @@ import org.java_websocket.enums.ReadyState;
 import org.java_websocket.handshake.ServerHandshake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocketCommander.From;
 
 /**
  * MIT License
@@ -51,7 +52,7 @@ public class WebSocketImpl implements IWebSocket {
 	private List<Consumer<Boolean>> listenerDisconnection;
 	private List<Runnable> listenerAuthentified;
 	private boolean authentified;
-	private HashMap<String, List<BiConsumer<String, String>>> listeners;
+	private HashMap<String, List<IWebSocketCommander>> listeners;
 	private boolean firstConnection = true;
 
 	public WebSocketImpl(String url, CustomInteraction customInteraction) throws URISyntaxException {
@@ -72,6 +73,7 @@ public class WebSocketImpl implements IWebSocket {
 				LOG.info("Connected to the WebSocket");
 				boolean copy = firstConnection;
 				firstConnection = false;
+				registerInternalCommands();
 				for (Consumer<Boolean> c : listenerConnection)
 					c.accept(copy);
 			}
@@ -91,11 +93,13 @@ public class WebSocketImpl implements IWebSocket {
 				String msg = "";
 				if (split.length > 2)
 					msg = String.join(" ", Arrays.copyOfRange(split, 2, split.length));
-				if (!handleCommand(srv, channel, msg)) {
-					if (!listeners.containsKey(channel))
-						return;
-					for (BiConsumer<String, String> consumer : listeners.get(channel))
-						consumer.accept(srv, msg);
+				if (!listeners.containsKey(channel))
+					return;
+				for (IWebSocketCommander commander : listeners.get(channel)) {
+					// Commander only accept from WebSocket
+					if (commander.from() == From.WEBSOCKET && !"MAIN".equalsIgnoreCase(srv))
+						continue;
+					commander.onReceive(srv, msg);
 				}
 			}
 
@@ -107,6 +111,7 @@ public class WebSocketImpl implements IWebSocket {
 			@Override
 			public void onClose(int code, String reason, boolean remote) {
 				LOG.info("WebSocket closed, code = {}, reason = {}, remote = {}", code, reason, remote);
+				// Clear listeners
 				listeners = new HashMap<>();
 				authentified = false;
 				for (Consumer<Boolean> r : listenerDisconnection)
@@ -230,53 +235,96 @@ public class WebSocketImpl implements IWebSocket {
 	}
 
 	@Override
-	public void addChannelListener(String channel, BiConsumer<String, String> listener) {
-		List<BiConsumer<String, String>> list = listeners.getOrDefault(channel, new ArrayList<>());
-		if (list.contains(listener))
-			return;
-		list.add(listener);
-		listeners.put(channel, list);
-	}
-
-	@Override
-	public void removeChannelListener(String channel, BiConsumer<String, String> listener) {
-		List<BiConsumer<String, String>> list = listeners.getOrDefault(channel, new ArrayList<>());
-		list.remove(listener);
-		listeners.put(channel, list);
-	}
-
-	@Override
 	public void removeChannelListener(String channel) {
 		listeners.remove(channel);
 	}
 
+	@Override
+	public void registerCommand(IWebSocketCommander commander) {
+		List<IWebSocketCommander> commanders = listeners.get(commander.name());
+		if (commanders == null) {
+			// Empty list
+			commanders = new ArrayList<>();
+		}
+		commanders.add(commander);
+		listeners.put(commander.name(), commanders);
+		if (isAuthentified()) {
+			// If authentified, send a request to the WebSocket
+			sendChannelMessage("register", commander.name());
+		}
+	}
+
+	@Override
+	public void unregisterCommand(IWebSocketCommander commander) {
+		List<IWebSocketCommander> commanders = listeners.get(commander.name());
+		if (commanders != null)
+			commanders.remove(commander);
+		listeners.put(commander.name(), commanders);
+		if (isAuthentified()) {
+			// If authentified, send a request to the WebSocket
+			sendChannelMessage("unregister", commander.name());
+		}
+	}
+
 	/**
-	 * Method used for internal operation
-	 * 
-	 * @param server
-	 * @param channel
-	 * @param msg
-	 * @return true if command is for internal operation
+	 * Create all internal handler for specific commands
 	 */
-	private boolean handleCommand(String server, String channel, String msg) {
-		if ("MAIN".equalsIgnoreCase(server) && "connection".equalsIgnoreCase(channel)) {
-			if ("ok".equalsIgnoreCase(msg)) {
-				// The app is authentified
-				if (!authentified) {
-					authentified = true;
-					if (listenerAuthentified.size() == 0)
-						return true;
-					for (Runnable run : listenerAuthentified)
-						run.run();
-					return true;
+	private void registerInternalCommands() {
+		// Connection ok
+		registerCommand(new IWebSocketCommander() {
+
+			@Override
+			public String name() {
+				return "connection";
+			}
+
+			@Override
+			public String description() {
+				return "Handler for accepted connection from WebSocket";
+			}
+
+			@Override
+			public From from() {
+				return From.WEBSOCKET;
+			}
+
+			@Override
+			public void onReceive(String from, String message) {
+				if ("ok".equalsIgnoreCase(message)) {
+					// The app is authentified
+					if (!authentified) {
+						authentified = true;
+						if (listenerAuthentified.size() == 0)
+							return;
+						for (Runnable run : listenerAuthentified)
+							run.run();
+					}
+
 				}
 			}
-		} else if ("MAIN".equalsIgnoreCase(server) && "stop".equalsIgnoreCase(channel)) {
-			// Stop the server
-			customInteraction.stop(msg);
-			return true;
-		}
+		});
+		// Stop request
+		registerCommand(new IWebSocketCommander() {
 
-		return false;
+			@Override
+			public String name() {
+				return "stop";
+			}
+
+			@Override
+			public String description() {
+				return "Handler for stopping the client";
+			}
+
+			@Override
+			public From from() {
+				return From.WEBSOCKET;
+			}
+
+			@Override
+			public void onReceive(String from, String message) {
+				customInteraction.stop(message);
+			}
+		});
 	}
 }
