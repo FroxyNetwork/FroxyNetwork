@@ -3,7 +3,6 @@ package com.froxynetwork.froxynetwork.network.websocket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
@@ -83,16 +82,24 @@ public class WebSocketImpl implements IWebSocket {
 				if (message == null || "".equalsIgnoreCase(message.trim()))
 					return;
 				LOG.debug("Got message {}", message);
-				String[] split = message.split(" ");
-				if (split.length < 2) {
+
+				// Get index of first space
+				int index = message.indexOf(' ');
+				// If there is only the server, we'll ignore the message
+				if (index == -1) {
 					// Error
 					LOG.warn("Ignoring message {}", message);
 				}
-				String srv = split[0];
-				String channel = split[1];
-				String msg = "";
-				if (split.length > 2)
-					msg = String.join(" ", Arrays.copyOfRange(split, 2, split.length));
+				// If -1 set all the message here, otherwise set the first word
+				String srv = message.substring(0, index == -1 ? message.length() : index);
+				// Get the index of second space
+				int secondSpaceIndex = message.indexOf(' ', index + 1);
+				// If index is -1 set empty string otherwise if secondSpaceIndex is -1 set the
+				// rest of the message otherwise set the second word
+				String channel = index == -1 ? ""
+						: (secondSpaceIndex == -1 ? message.substring(index + 1)
+								: message.substring(index + 1, secondSpaceIndex));
+				String msg = index == -1 || secondSpaceIndex == -1 ? "" : message.substring(secondSpaceIndex + 1);
 				if (!listeners.containsKey(channel))
 					return;
 				for (IWebSocketCommander commander : listeners.get(channel)) {
