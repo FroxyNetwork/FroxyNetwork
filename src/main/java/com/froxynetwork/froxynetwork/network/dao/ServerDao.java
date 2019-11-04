@@ -3,6 +3,7 @@ package com.froxynetwork.froxynetwork.network.dao;
 import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
+import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.ServerDocker;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput;
 
 import retrofit2.Call;
@@ -82,6 +83,18 @@ public interface ServerDao {
 	@Headers("Content-Type: application/json")
 	@PUT("server/{id}")
 	public Call<ServerDataOutput> updateServer(@Path("id") String id, @Body Server server);
+
+	/**
+	 * Set the id of the server containing the docker and the id of the docker
+	 * 
+	 * @param id           The id of the server
+	 * @param serverDocker The id if the server containing the docker and the id of
+	 *                     the docker
+	 * @return Empty response
+	 */
+	@Headers("Content-Type: application/json")
+	@PUT("server/{id}/id")
+	public Call<EmptyDataOutput> updateServerDocker(@Path("id") String id, @Body ServerDocker serverDocker);
 
 	/**
 	 * Delete (close) an existing server to the REST service

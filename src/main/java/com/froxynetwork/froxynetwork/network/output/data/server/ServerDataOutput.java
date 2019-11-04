@@ -103,4 +103,12 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 			return sb.toString();
 		}
 	}
+	
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServerDocker {
+		private String server;
+		private String id;
+	}
 }
