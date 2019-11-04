@@ -108,7 +108,7 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class ServerDocker {
-		private String server;
+		private int server;
 		private String id;
 	}
 }
