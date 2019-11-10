@@ -38,6 +38,7 @@ public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOu
 	@AllArgsConstructor
 	public static class ServersConfig {
 		private ServerConfig[] types;
+		private VpsConfig[] vps;
 	}
 
 	@Data
@@ -47,5 +48,14 @@ public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOu
 		private String id;
 		private String[] database;
 		private ServerConfig[] variants;
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class VpsConfig {
+		private String id;
+		private String host;
+		private String path;
 	}
 }
