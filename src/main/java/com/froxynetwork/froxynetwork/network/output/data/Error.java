@@ -69,8 +69,8 @@ public enum Error {
 	SERVER_TYPE_INVALID(209, "Type must be a string !"),
 	SERVER_TYPE_LENGTH(210, "Type length must be between 1 and 16 !"),
 	SERVER_TESTER_INVALID(211, "Invalid id / token / client_id"),
-	SERVER_SERVER_INVALID(212, "Server must be a correct number and between 1 and 256 !"),
-	SERVER_SERVERID_INVALID(213, "Serverid must be a string !"),
+	SERVER_SERVER_INVALID(212, "Invalid server !"),
+	SERVER_SERVER_DOCKER_INVALID(213, "Invalid docker id !"),
 	SERVER_SERVER_ALREADY_ID(214, "This server is already linked to a docker"),
 	SERVER_DOCKER_SAVING(215, "Error while saving docker configuration"),
 	
