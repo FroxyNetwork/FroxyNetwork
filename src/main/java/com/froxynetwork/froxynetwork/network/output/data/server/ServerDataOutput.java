@@ -48,6 +48,7 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private Date creationTime;
 		private Date endTime;
 		private ServerAuth auth;
+		private ServerDocker docker;
 
 		public ServerStatus getStatus() {
 			switch (status) {
