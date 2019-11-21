@@ -137,6 +137,12 @@ public class WebSocketImpl implements IWebSocket {
 		return isConnected() && authentified;
 	}
 
+	@Override
+	public void stopThread() {
+		if (t != null && t.isAlive() && !t.isInterrupted())
+			t.interrupt();
+	}
+
 	private Thread t;
 
 	@Override

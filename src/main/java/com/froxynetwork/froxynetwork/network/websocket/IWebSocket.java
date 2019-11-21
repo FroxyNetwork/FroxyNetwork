@@ -42,6 +42,13 @@ public interface IWebSocket {
 	public boolean isAuthentified();
 
 	/**
+	 * Interrupt the connection Thread if running
+	 */
+	public default void stopThread() {
+		// Nothing to do here
+	}
+
+	/**
 	 * Connect to the server.<br />
 	 * This method create a new Thread
 	 * 

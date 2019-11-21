@@ -70,6 +70,11 @@ public class WebSocketManager implements IWebSocket {
 	}
 
 	@Override
+	public void stopThread() {
+		webSocket.stopThread();
+	}
+
+	@Override
 	public void reconnect(String id, String clientId, String token) {
 		webSocket.reconnect(id, clientId, token);
 	}
