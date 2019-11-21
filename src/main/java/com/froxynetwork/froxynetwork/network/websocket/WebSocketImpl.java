@@ -152,7 +152,7 @@ public class WebSocketImpl implements IWebSocket {
 				// We'll try 10 times to connect to the WebSocket
 				boolean ok = false;
 				client = client();
-				for (int i = 1; i <= 10 && !ok; i++) {
+				for (int i = 1; i <= 10 && !ok && !Thread.interrupted(); i++) {
 					LOG.info("Trying to connect #{}", i);
 					if (i == 1)
 						ok = client.connectBlocking();
