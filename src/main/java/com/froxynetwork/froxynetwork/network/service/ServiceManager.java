@@ -40,12 +40,12 @@ public final class ServiceManager {
 	private ServerConfigService serverConfigService;
 
 	@Getter
-	private ServerDownloadService serverDownloadService;
+	private ServerTesterService serverTesterService;
 
 	public ServiceManager(Retrofit retrofit) {
 		playerService = new PlayerService(retrofit);
 		serverService = new ServerService(retrofit);
 		serverConfigService = new ServerConfigService(retrofit);
-		serverDownloadService = new ServerDownloadService(retrofit);
+		serverTesterService = new ServerTesterService(retrofit);
 	}
 }

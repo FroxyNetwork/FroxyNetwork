@@ -48,6 +48,7 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private Date creationTime;
 		private Date endTime;
 		private ServerAuth auth;
+		private ServerDocker docker;
 
 		public ServerStatus getStatus() {
 			switch (status) {
@@ -72,10 +73,8 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		/**
 		 * Check if b is after or equals to a
 		 * 
-		 * @param a
-		 *            The first status
-		 * @param b
-		 *            The second status
+		 * @param a The first status
+		 * @param b The second status
 		 * 
 		 * @return true if b is after or equals to a
 		 */
@@ -102,5 +101,13 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 			sb.append(")");
 			return sb.toString();
 		}
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServerDocker {
+		private String server;
+		private String id;
 	}
 }

@@ -1,8 +1,11 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.dao;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.froxynetwork.froxynetwork.network.output.data.ServerTesterDataOutput;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * MIT License
@@ -29,31 +32,15 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+public interface ServerTesterDao {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private String firstLogin;
-		private String lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
-	}
+	/**
+	 * Test if a server has the permission to connect to the WebSocket
+	 * 
+	 * @param id
+	 *            The id of the server
+	 * @return Specific server if exists
+	 */
+	@GET("server/tester/{id}")
+	public Call<ServerTesterDataOutput> checkServer(@Path("id") String id, @Query("client_id") String clientId, @Query("token") String token);
 }

@@ -1,10 +1,8 @@
-package com.froxynetwork.froxynetwork.network.dao;
+package com.froxynetwork.froxynetwork.network.output.data;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Streaming;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * MIT License
@@ -31,16 +29,12 @@ import retrofit2.http.Streaming;
  * 
  * @author 0ddlyoko
  */
-public interface ServerDownloadDao {
+public class ServerTesterDataOutput extends GeneralDataOutput<ServerTesterDataOutput.ServerTester> {
 
-	/**
-	 * Download a server
-	 * 
-	 * @param type
-	 *            The type of the server
-	 * @return
-	 */
-	@Streaming
-	@GET("server/download/{type}")
-	public Call<ResponseBody> getServerConfig(@Path("type") String type);
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class ServerTester {
+		private boolean ok;
+	}
 }

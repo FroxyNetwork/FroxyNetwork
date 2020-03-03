@@ -1,8 +1,4 @@
-package com.froxynetwork.froxynetwork.network.output.data;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.froxynetwork.froxynetwork.network.websocket;
 
 /**
  * MIT License
@@ -29,31 +25,49 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+/**
+ * Used to register new commands to execute once a message is received
+ */
+public interface IWebSocketCommander {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private String firstLogin;
-		private String lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
+	/**
+	 * @return The name of the command
+	 */
+	public String name();
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
+	/**
+	 * @return The description of the command
+	 */
+	public String description();
+
+	/**
+	 * @return {@link From#ALL} if you want to accept messages from WebSocket and
+	 *         Server or {@link From#WEBSOCKET} if you want only to accept messages
+	 *         from WebSocket
+	 */
+	public From from();
+
+	/**
+	 * Action to execute once the message is received
+	 * 
+	 * @param from    The original name of the server which sent the message or MAIN
+	 *                if from WebSocket
+	 * @param message The message
+	 */
+
+	public void onReceive(String from, String message);
+
+	/**
+	 * Filter commands from the WebSocket
+	 */
+	public enum From {
+		/**
+		 * Accept message from WebSocket and Server
+		 */
+		ALL,
+		/**
+		 * Accept message only from WebSocket
+		 */
+		WEBSOCKET
 	}
 }

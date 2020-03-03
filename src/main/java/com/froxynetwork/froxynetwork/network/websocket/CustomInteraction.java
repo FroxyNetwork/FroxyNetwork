@@ -1,8 +1,4 @@
-package com.froxynetwork.froxynetwork.network.output.data;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.froxynetwork.froxynetwork.network.websocket;
 
 /**
  * MIT License
@@ -29,31 +25,9 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private String firstLogin;
-		private String lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
-	}
+/**
+ * Class used for custom interaction from sent from WebSocket (like server stop)
+ */
+public interface CustomInteraction {
+	public void stop(String msg);
 }

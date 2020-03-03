@@ -127,6 +127,18 @@ public class AuthenticationInterceptor implements Interceptor {
 				LOG.error("Error while asking new token: ", ex);
 			}
 		}
+		// TODO Find a better Exception
 		throw new IllegalStateException("Cannot retrieve a new Authentication Token !");
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	/**
+	 * @return true if the token is expired
+	 */
+	public boolean isTokenExpired() {
+		return expirationDate == null || expirationDate.before(new Date());
 	}
 }
