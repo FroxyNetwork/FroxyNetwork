@@ -69,7 +69,7 @@ public class PlayerService {
 	public void asyncAddPlayer(UUID uuid, String pseudo, String ip, Callback<Player> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncAddPlayer: Adding new player, uuid = {}, pseudo = {}, ip = {}", uuid, pseudo, ip);
-		playerDao.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null))
+		playerDao.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null, null))
 				.enqueue(ServiceHelper.callback(callback, PlayerDataOutput.class));
 	}
 
@@ -77,7 +77,7 @@ public class PlayerService {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncAddPlayer: Adding new player, uuid = {}, pseudo = {}, ip = {}", uuid, pseudo, ip);
 		Response<PlayerDataOutput> response = playerDao
-				.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null)).execute();
+				.createPlayer(new Player(uuid.toString(), pseudo, null, 0, 0, 0, null, null, ip, null, null)).execute();
 		PlayerDataOutput body = ServiceHelper.response(response, PlayerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);

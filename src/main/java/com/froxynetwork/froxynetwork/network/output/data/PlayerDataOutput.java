@@ -45,5 +45,15 @@ public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player>
 		private String lastLogin;
 		private String ip;
 		private String lang;
+		private Server server;
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class Server {
+		private String id;
+		private String name;
+		private String type;
 	}
 }

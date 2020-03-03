@@ -56,6 +56,7 @@ public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOu
 	public static class VpsConfig {
 		private String id;
 		private String host;
+		private int port;
 		private String path;
 	}
 }
