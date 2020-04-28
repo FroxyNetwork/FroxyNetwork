@@ -41,13 +41,6 @@ public interface IWebSocketCommander {
 	public String description();
 
 	/**
-	 * @return {@link From#ALL} if you want to accept messages from WebSocket and
-	 *         Server or {@link From#WEBSOCKET} if you want only to accept messages
-	 *         from WebSocket
-	 */
-	public From from();
-
-	/**
 	 * Action to execute once the message is received
 	 * 
 	 * @param from    The original name of the server which sent the message or MAIN
@@ -56,18 +49,4 @@ public interface IWebSocketCommander {
 	 */
 
 	public void onReceive(String from, String message);
-
-	/**
-	 * Filter commands from the WebSocket
-	 */
-	public enum From {
-		/**
-		 * Accept message from WebSocket and Server
-		 */
-		ALL,
-		/**
-		 * Accept message only from WebSocket
-		 */
-		WEBSOCKET
-	}
 }

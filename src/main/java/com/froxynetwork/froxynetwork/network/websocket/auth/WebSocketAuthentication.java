@@ -1,15 +1,11 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.websocket.auth;
 
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
 
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,31 +27,42 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+/**
+ * Used to authenticate WebSocket client with WebSocket Server
+ */
+public interface WebSocketAuthentication {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
+	/**
+	 * Initialize this WebSockerAuthentication
+	 * 
+	 * @param webSocket The WebSocket associated to this Authentication
+	 */
+	public void init(IWebSocket webSocket);
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
+	/**
+	 * Used to register the authentication listener<br />
+	 * This method is called after {@link #init(IWebSocket)} and will register
+	 * events that will result in a call to {@link #authentificate()}<br />
+	 * Example: Register connection event and call {@linkplain #authentificate()}
+	 */
+	public void registerAuthenticationListener();
+
+	/**
+	 * Authentificate this WebSocket
+	 * 
+	 * @param webSocket The WebSocket
+	 */
+	public void authenticate();
+
+	/**
+	 * @return true if this WebSocket is authentificated
+	 */
+	public boolean isAuthenticated();
+
+	/**
+	 * Called when this WebSocket is stopped and will not be reused
+	 */
+	public default void stop() {
+		// Nothing to do
 	}
 }

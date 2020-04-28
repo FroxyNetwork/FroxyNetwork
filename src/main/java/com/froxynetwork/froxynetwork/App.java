@@ -1,16 +1,17 @@
 package com.froxynetwork.froxynetwork;
 
+import java.net.InetSocketAddress;
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.froxynetwork.froxynetwork.network.NetworkManager;
-import com.froxynetwork.froxynetwork.network.output.Callback;
-import com.froxynetwork.froxynetwork.network.output.RestException;
-import com.froxynetwork.froxynetwork.network.output.data.ServerTesterDataOutput;
-import com.froxynetwork.froxynetwork.network.output.data.ServerTesterDataOutput.ServerTester;
-import com.froxynetwork.froxynetwork.network.service.ServiceManager;
-import com.froxynetwork.froxynetwork.network.websocket.CustomInteraction;
-import com.froxynetwork.froxynetwork.network.websocket.WebSocketManager;
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocketCommander;
+import com.froxynetwork.froxynetwork.network.websocket.WebSocketClientImpl;
+import com.froxynetwork.froxynetwork.network.websocket.WebSocketFactory;
+import com.froxynetwork.froxynetwork.network.websocket.WebSocketServer;
+import com.froxynetwork.froxynetwork.network.websocket.auth.WebSocketTokenAuthentication;
 
 /**
  * MIT License
@@ -41,67 +42,70 @@ public class App {
 	private Logger LOG = LoggerFactory.getLogger(getClass());
 
 	private NetworkManager nm;
-	private WebSocketManager wsm;
-	private CustomInteraction customInteraction;
+	private WebSocketServer wss;
 
 	public App() throws Exception {
 		// This is just for TESTING
 
 		// TODO URL in config file
-		String url = "http://localhost/";
-		String clientId = "WEBSOCKET_5538f57946961ad1c06064b89112d74b";
-		String clientSecret = "SECRET_1b49eda57b597a055973dd6f87ac3983";
-		initCustomInteraction();
-		wsm = new WebSocketManager("ws://localhost", customInteraction);
+		String url = "http://0ddlyoko.alwaysdata.net";
+		String clientId = "VPS_01";
+		String clientSecret = "LOL";
 		nm = new NetworkManager(url, clientId, clientSecret);
-		ServiceManager sm = nm.getNetwork();
+		wss = WebSocketFactory.server(new InetSocketAddress("localhost", 25566), new WebSocketTokenAuthentication(nm));
+		wss.registerWebSocketConnection(wssi -> {
+			System.out.println("Server: New connection !");
+			wssi.registerCommand(new IWebSocketCommander() {
 
-		String idTester = "CLIENT_KOTH_4c72fb1d585c25dfcaf5fdbb218eed87";
-		String clientIdTester = "";
-		String tokenTester = "def019ee9f4af62223d9f81ae86e5f8a6c78431e";
+				@Override
+				public String name() {
+					return "test";
+				}
 
-		sm.getServerTesterService().asyncCheckServer(idTester, clientIdTester, tokenTester,
-				new Callback<ServerTesterDataOutput.ServerTester>() {
+				@Override
+				public String description() {
+					return "Just a test";
+				}
 
-					@Override
-					public void onResponse(ServerTester response) {
-						System.out.println("Isok ? " + response.isOk());
-						// Shutdown at the end
-						stop();
-					}
+				@Override
+				public void onReceive(String from, String message) {
+					System.out.println("Server: Got message ! name = test, from = " + from + ", message = " + message);
+					wssi.sendCommand("lol", "Heyy oui et toi ?");
+				}
+			});
+			wssi.registerWebSocketAuthentication(() -> {
+				System.out.println("Server: Authentified !");
+			});
+		});
+		wss.start();
 
-					@Override
-					public void onFailure(RestException ex) {
-						ex.printStackTrace();
-						// Shutdown at the end
-						stop();
-					}
-
-					@Override
-					public void onFatalFailure(Throwable t) {
-						t.printStackTrace();
-						// Shutdown at the end
-						stop();
-					}
-				});
-	}
-
-	private void stop() {
-		if (nm != null)
-			nm.shutdown();
-		if (wsm != null)
-			wsm.disconnect();
-	}
-
-	private void initCustomInteraction() {
-		customInteraction = new CustomInteraction() {
+		WebSocketClientImpl wsci = WebSocketFactory.client(new URI("ws://localhost:25566"),
+				new WebSocketTokenAuthentication(nm));
+		wsci.registerWebSocketConnection(first -> {
+			System.out.println("Client: Connected !");
+		});
+		wsci.registerWebSocketAuthentication(() -> {
+			System.out.println("Client: Authentified !");
+			wsci.sendCommand("test", "Heyyyyyy ça va ?");
+		});
+		wsci.registerCommand(new IWebSocketCommander() {
 
 			@Override
-			public void stop(String msg) {
-				// Nothing to do here
-				LOG.info("stop({})", msg);
+			public String name() {
+				return "lol";
 			}
-		};
+
+			@Override
+			public String description() {
+				return "LoL";
+			}
+
+			@Override
+			public void onReceive(String from, String message) {
+				System.out.println("Client: Got message ! name = lol, from = " + from + ", message = " + message);
+			}
+		});
+		wsci.tryConnect();
 	}
 
 	public static void main(String[] args) throws Exception {

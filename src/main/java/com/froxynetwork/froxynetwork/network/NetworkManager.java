@@ -72,10 +72,6 @@ public final class NetworkManager {
 			LOG.debug("Shutting down okHttp");
 		okHttpClient.dispatcher().executorService().shutdown();
 	}
-
-	public String getAuthenticationToken() {
-		return authenticationInterceptor.getToken();
-	}
 	
 	public boolean isTokenExpired() {
 		return authenticationInterceptor.isTokenExpired();

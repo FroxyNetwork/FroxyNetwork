@@ -52,16 +52,30 @@ public class ServerService {
 		serverDao = retrofit.create(ServerDao.class);
 	}
 
+	/**
+	 * Call <code>asyncGetServer(id, Type.ALL, callback);</code>
+	 */
 	public void asyncGetServer(String id, Callback<Server> callback) {
-		if (LOG.isDebugEnabled())
-			LOG.debug("asyncGetServer: Retrieving server {}", id);
-		serverDao.getServer(id).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
+		asyncGetServer(id, Type.ALL, callback);
 	}
 
+	/**
+	 * Call <code>syncGetServer(id, Type.ALL);</code>
+	 */
 	public Server syncGetServer(String id) throws RestException, Exception {
+		return syncGetServer(id, Type.ALL);
+	}
+
+	public void asyncGetServer(String id, Type type, Callback<Server> callback) {
+		if (LOG.isDebugEnabled())
+			LOG.debug("asyncGetServer: Retrieving server {}", id);
+		serverDao.getServer(id, type.getType()).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
+	}
+
+	public Server syncGetServer(String id, Type type) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncGetServer: Retrieving server {}", id);
-		Response<ServerDataOutput> response = serverDao.getServer(id).execute();
+		Response<ServerDataOutput> response = serverDao.getServer(id, type.getType()).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
@@ -159,5 +173,19 @@ public class ServerService {
 			throw new RestException(body);
 		else
 			return body.getData();
+	}
+
+	public enum Type {
+		SERVER(1), BUNGEE(2), ALL(3);
+
+		private int type;
+
+		private Type(int type) {
+			this.type = type;
+		}
+
+		public int getType() {
+			return type;
+		}
 	}
 }

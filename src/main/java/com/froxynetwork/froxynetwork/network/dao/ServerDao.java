@@ -9,6 +9,7 @@ import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOu
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -50,7 +51,7 @@ public interface ServerDao {
 	 * @return Specific server if exists
 	 */
 	@GET("server/{id}")
-	public Call<ServerDataOutput> getServer(@Path("id") String id);
+	public Call<ServerDataOutput> getServer(@Path("id") String id, @Field("type") int type);
 
 	/**
 	 * Get all server connected

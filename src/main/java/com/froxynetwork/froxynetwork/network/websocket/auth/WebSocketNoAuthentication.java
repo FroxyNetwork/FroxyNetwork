@@ -1,9 +1,11 @@
-package com.froxynetwork.froxynetwork.network.websocket;
+package com.froxynetwork.froxynetwork.network.websocket.auth;
+
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
 
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,8 +28,27 @@ package com.froxynetwork.froxynetwork.network.websocket;
  * @author 0ddlyoko
  */
 /**
- * Class used for custom interaction from sent from WebSocket (like server stop)
+ * Use this class if you don't need authentication
  */
-public interface CustomInteraction {
-	public void stop(String msg);
+public class WebSocketNoAuthentication implements WebSocketAuthentication {
+
+	@Override
+	public void init(IWebSocket webSocket) {
+		// Don't need to initialize
+	}
+
+	@Override
+	public void registerAuthenticationListener() {
+		// Nothing to do here
+	}
+
+	@Override
+	public void authenticate() {
+		// Don't need to authenticate
+	}
+
+	@Override
+	public boolean isAuthenticated() {
+		return true;
+	}
 }

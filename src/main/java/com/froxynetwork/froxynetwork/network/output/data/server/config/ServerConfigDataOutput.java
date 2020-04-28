@@ -1,6 +1,7 @@
 package com.froxynetwork.froxynetwork.network.output.data.server.config;
 
 import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -57,6 +58,7 @@ public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOu
 		private String id;
 		private String host;
 		private int port;
-		private String path;
+		@SerializedName("max_servers")
+		private int maxServers;
 	}
 }

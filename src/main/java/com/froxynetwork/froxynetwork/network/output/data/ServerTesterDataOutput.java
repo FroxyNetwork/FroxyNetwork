@@ -1,6 +1,5 @@
 package com.froxynetwork.froxynetwork.network.output.data;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,8 +32,18 @@ public class ServerTesterDataOutput extends GeneralDataOutput<ServerTesterDataOu
 
 	@Data
 	@NoArgsConstructor
-	@AllArgsConstructor
 	public static class ServerTester {
 		private boolean ok;
+		private String id;
+		private String token;
+
+		public ServerTester(boolean ok) {
+			this.ok = ok;
+		}
+
+		public ServerTester(String id, String token) {
+			this.id = id;
+			this.token = token;
+		}
 	}
 }

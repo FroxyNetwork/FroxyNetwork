@@ -131,10 +131,6 @@ public class AuthenticationInterceptor implements Interceptor {
 		throw new IllegalStateException("Cannot retrieve a new Authentication Token !");
 	}
 
-	public String getToken() {
-		return token;
-	}
-
 	/**
 	 * @return true if the token is expired
 	 */
