@@ -177,7 +177,7 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 		if (commanders == null)
 			return;
 		for (IWebSocketCommander commander : commanders)
-			commander.onReceive(canal, msg);
+			commander.onReceive(msg);
 	}
 
 	public void onMessage(String message) {

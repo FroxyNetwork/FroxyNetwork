@@ -68,8 +68,8 @@ public class App {
 				}
 
 				@Override
-				public void onReceive(String from, String message) {
-					System.out.println("Server: Got message ! name = test, from = " + from + ", message = " + message);
+				public void onReceive(String message) {
+					System.out.println("Server: Got message ! name = test, message = " + message);
 					wssi.sendCommand("lol", "Heyy oui et toi ?");
 				}
 			});
@@ -101,8 +101,8 @@ public class App {
 			}
 
 			@Override
-			public void onReceive(String from, String message) {
-				System.out.println("Client: Got message ! name = lol, from = " + from + ", message = " + message);
+			public void onReceive(String message) {
+				System.out.println("Client: Got message ! name = lol, message = " + message);
 			}
 		});
 		wsci.tryConnect();

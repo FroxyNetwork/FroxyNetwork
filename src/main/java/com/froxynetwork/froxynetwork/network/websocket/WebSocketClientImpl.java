@@ -239,7 +239,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 		if (commanders == null)
 			return;
 		for (IWebSocketCommander commander : commanders)
-			commander.onReceive(canal, msg);
+			commander.onReceive(msg);
 	}
 
 	/**

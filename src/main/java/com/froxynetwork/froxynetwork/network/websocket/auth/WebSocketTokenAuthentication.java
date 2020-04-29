@@ -70,7 +70,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 				}
 
 				@Override
-				public void onReceive(String from, String message) {
+				public void onReceive(String message) {
 					authenticated = true;
 					// Fire event
 					webSocket.onAuthentication();
@@ -90,7 +90,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 				}
 
 				@Override
-				public void onReceive(String from, String message) {
+				public void onReceive(String message) {
 					if (isAuthenticated())
 						// Say to the client that he's already authenticated
 						webSocket.sendCommand("auth", "");

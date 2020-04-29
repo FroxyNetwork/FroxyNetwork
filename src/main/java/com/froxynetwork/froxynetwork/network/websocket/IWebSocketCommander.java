@@ -43,10 +43,8 @@ public interface IWebSocketCommander {
 	/**
 	 * Action to execute once the message is received
 	 * 
-	 * @param from    The original name of the server which sent the message or MAIN
-	 *                if from WebSocket
 	 * @param message The message
 	 */
 
-	public void onReceive(String from, String message);
+	public void onReceive(String message);
 }
