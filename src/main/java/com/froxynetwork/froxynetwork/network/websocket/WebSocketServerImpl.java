@@ -50,6 +50,7 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 	private List<Runnable> listenerAuthentication;
 	private WebSocketAuthentication authentication;
 	private HashMap<String, List<IWebSocketCommander>> listeners;
+	private HashMap<String, Object> saved;
 
 	public WebSocketServerImpl(WebSocketListener listener, List<Draft> drafts, WebSocketAuthentication authentication) {
 		super(listener, drafts);
@@ -58,6 +59,7 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 		this.listenerDisconnection = new ArrayList<>();
 		this.listenerAuthentication = new ArrayList<>();
 		this.listeners = new HashMap<>();
+		this.saved = new HashMap<>();
 		authentication.init(this);
 		authentication.registerAuthenticationListener();
 	}
@@ -201,5 +203,15 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 
 	public void onError(Exception ex) {
 		LOG.error("Error: ", ex);
+	}
+
+	@Override
+	public void save(String key, Object obj) {
+		saved.put(key, obj);
+	}
+
+	@Override
+	public Object get(String key) {
+		return saved.get(key);
 	}
 }

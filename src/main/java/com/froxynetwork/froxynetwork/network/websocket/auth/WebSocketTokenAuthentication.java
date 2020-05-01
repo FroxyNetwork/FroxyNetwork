@@ -41,11 +41,14 @@ import com.froxynetwork.froxynetwork.network.websocket.IWebSocketCommander;
  */
 public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
+	public static final String TOKEN = "TOKEN_ID";
 
 	private NetworkManager networkManager;
 	private IWebSocket webSocket;
 	private Thread authThread;
 	private boolean authenticated;
+
+	private String id;
 
 	public WebSocketTokenAuthentication(NetworkManager networkManager) {
 		this.networkManager = networkManager;
@@ -72,6 +75,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 				@Override
 				public void onReceive(String message) {
 					authenticated = true;
+					webSocket.save(TOKEN, id);
 					// Fire event
 					webSocket.onAuthentication();
 				}
@@ -106,6 +110,8 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 								public void onResponse(ServerTester response) {
 									if (response.isOk()) {
 										authenticated = true;
+										// Save
+										webSocket.save(TOKEN, msgs[0]);
 										// Say that this server is authenticated
 										webSocket.sendCommand("auth", "");
 										// Fire event
@@ -169,7 +175,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 
 					@Override
 					public void onResponse(ServerTester response) {
-						String id = response.getId();
+						id = response.getId();
 						String token = response.getToken();
 						if (webSocket.isConnected()) {
 							// Send auth command
@@ -180,6 +186,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 					@Override
 					public void onFailure(RestException ex) {
 						LOG.error("Error while asking for a token: ", ex);
+						LOG.error("" + ex.getError());
 					}
 
 					@Override

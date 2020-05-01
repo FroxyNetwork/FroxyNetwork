@@ -56,9 +56,6 @@ public enum Error {
 	PLAYER_EXP_POSITIVE(112, "Exp must be positive !"), //
 	PLAYER_TIME_FORMAT(113, "Bad time format !"), //
 	PLAYER_LASTLOGIN_GREATER(114, "LastLogin must be greater than saved LastLogin !"), //
-	PLAYER_SERVER_INVALID(115, "Invalid Server type !"), //
-	PLAYER_SERVER_NOT_FOUND(116, "Server not found !"), //
-	PLAYER_SERVER_NOT_OPENED(117, "Server isn't opened !"), //
 
 	SERVER_ID_INVALID(200, "Invalid id"), //
 	SERVER_NOT_FOUND(201, "Server not found"), //
@@ -73,17 +70,13 @@ public enum Error {
 	SERVER_ACTUALLY_ENDED(208, "This server is already ended !"), //
 	SERVER_TYPE_INVALID(209, "Type must be a string !"), //
 	SERVER_TYPE_LENGTH(210, "Type length must be between 1 and 16 !"), //
-	SERVER_TESTER_INVALID(211, "Invalid id / token / client_id"), //
-	SERVER_SERVER_INVALID(212, "Invalid server !"), //
-	SERVER_SERVER_DOCKER_INVALID(213, "Invalid docker id !"), //
-	SERVER_SERVER_ALREADY_ID(214, "This server is already linked to a docker"), //
-	SERVER_DOCKER_SAVING(215, "Error while saving docker configuration"), //
 
 	INTERNAL_SERVER_JSON(1000, "Internal Server Error: servers.json is not a valid json file !"), //
 	INTERNAL_SERVER_CONFIG(1001, "Internal Server Error: config.ini is not a valid ini file !"), //
 	INTERNAL_SERVER_CONFIG_MONGODB(1002, "Internal Server Error: config.ini is not a valid ini file !"), //
 	INTERNAL_SERVER_DATABASE(1003, "Internal Server Error: Cannot contact database !"), //
-	SERVER_TYPE_NOT_FOUND(1004, "Server type not found !"); //
+	SERVER_TYPE_NOT_FOUND(1004, "Server type not found !"), //
+	SERVER_TYPE_FILE_NOT_FOUND(1005, "Server file not found !"); //
 
 	private int id;
 	private String message;

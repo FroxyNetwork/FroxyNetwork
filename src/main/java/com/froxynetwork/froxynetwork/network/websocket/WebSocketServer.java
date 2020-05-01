@@ -64,7 +64,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
 	/**
 	 * Register WebSocket Authentication Timeout (Default is 3 seconds)
 	 */
-	public void registerAuthenticationTimeout() {
+	protected void registerAuthenticationTimeout() {
 		registerWebSocketConnection(webSocket -> {
 			new Thread(() -> {
 				try {

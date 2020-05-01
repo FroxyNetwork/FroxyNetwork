@@ -55,14 +55,16 @@ public final class ServiceHelper {
 				try {
 					body = response(response, clazz);
 				} catch (Exception ex) {
+					LOG.debug("Fatal Failure: " + response.toString());
 					onFailure(call, ex);
 					return;
 				}
 				if (callback != null) {
-					if (body.isError())
+					if (body.isError()) {
 						// (Normally) impossible
+						LOG.debug("Failure: " + body.toString());
 						callback.onFailure(new RestException(body));
-					else
+					} else
 						callback.onResponse(body.getData());
 				}
 			}

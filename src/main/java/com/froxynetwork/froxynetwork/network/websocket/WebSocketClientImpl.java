@@ -55,6 +55,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	// Thread used to connect to WebSocket
 	private Thread connectionThread;
 	protected boolean firstConnection = true;
+	private HashMap<String, Object> saved;
 
 	public WebSocketClientImpl(URI uri, WebSocketAuthentication authentication) throws URISyntaxException {
 		super(uri);
@@ -64,6 +65,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 		this.listenerDisconnection = new ArrayList<>();
 		this.listenerAuthentified = new ArrayList<>();
 		this.listeners = new HashMap<>();
+		this.saved = new HashMap<>();
 		authentication.init(this);
 		authentication.registerAuthenticationListener();
 	}
@@ -285,5 +287,15 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	@Override
 	public void onError(Exception ex) {
 		LOG.error("Error: ", ex);
+	}
+
+	@Override
+	public void save(String key, Object obj) {
+		saved.put(key, obj);
+	}
+
+	@Override
+	public Object get(String key) {
+		return saved.get(key);
 	}
 }

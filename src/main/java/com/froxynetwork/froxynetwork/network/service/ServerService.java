@@ -10,7 +10,6 @@ import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput.Empty;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
-import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.ServerDocker;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput.ServerList;
 
@@ -103,7 +102,7 @@ public class ServerService {
 	public void asyncAddServer(String name, String type, int port, Callback<Server> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncAddServer: Adding new server, name = {}, type = {}, port = {}", name, type, port);
-		serverDao.createServer(new Server("", name, type, port, null, null, null, null, null))
+		serverDao.createServer(new Server("", name, type, null, port, null, null, null, null))
 				.enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
@@ -111,7 +110,7 @@ public class ServerService {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncAddServer: Adding new server, name = {}, type = {}, port = {}", name, type, port);
 		Response<ServerDataOutput> response = serverDao
-				.createServer(new Server("", name, type, port, null, null, null, null, null)).execute();
+				.createServer(new Server("", name, type, null, port, null, null, null, null)).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
@@ -133,25 +132,6 @@ public class ServerService {
 					server.getStatus());
 		Response<ServerDataOutput> response = serverDao.updateServer(server.getId(), server).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
-		if (body.isError())
-			throw new RestException(body);
-		else
-			return body.getData();
-	}
-
-	public void asyncEditServerDocker(String id, ServerDocker docker, Callback<Empty> callback) {
-		if (LOG.isDebugEnabled())
-			LOG.debug("asyncEditServerDocker: Editing Server {}, server={}, dockerId={}", id, docker.getServer(),
-					docker.getId());
-		serverDao.updateServerDocker(id, docker).enqueue(ServiceHelper.callback(callback, EmptyDataOutput.class));
-	}
-
-	public Empty syncEditServerDocker(String id, ServerDocker docker) throws RestException, Exception {
-		if (LOG.isDebugEnabled())
-			LOG.debug("syncEditServerDocker: Editing Server {}, server={}, dockerId={}", id, docker.getServer(),
-					docker.getId());
-		Response<EmptyDataOutput> response = serverDao.updateServerDocker(id, docker).execute();
-		EmptyDataOutput body = ServiceHelper.response(response, EmptyDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
 		else

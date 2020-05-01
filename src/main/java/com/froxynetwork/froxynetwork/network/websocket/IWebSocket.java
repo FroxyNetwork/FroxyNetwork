@@ -160,4 +160,18 @@ public interface IWebSocket {
 	 * @param msg     The message
 	 */
 	public void onCommand(String channel, String msg);
+
+	/**
+	 * Save an object to this WebSocket
+	 * 
+	 * @param key The key
+	 * @param obj The object
+	 */
+	public void save(String key, Object obj);
+
+	/**
+	 * @param key The key
+	 * @return The object associated with this key
+	 */
+	public Object get(String key);
 }

@@ -50,7 +50,7 @@ public class App {
 		// TODO URL in config file
 		String url = "http://0ddlyoko.alwaysdata.net";
 		String clientId = "VPS_01";
-		String clientSecret = "LOL";
+		String clientSecret = "45498a26273a5136edd506e161b3e417";
 		nm = new NetworkManager(url, clientId, clientSecret);
 		wss = WebSocketFactory.server(new InetSocketAddress("localhost", 25566), new WebSocketTokenAuthentication(nm));
 		wss.registerWebSocketConnection(wssi -> {

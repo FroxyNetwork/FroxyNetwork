@@ -31,15 +31,17 @@ import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
  * Use this class if you don't need authentication
  */
 public class WebSocketNoAuthentication implements WebSocketAuthentication {
+	private IWebSocket webSocket;
 
 	@Override
 	public void init(IWebSocket webSocket) {
-		// Don't need to initialize
+		this.webSocket = webSocket;
 	}
 
 	@Override
 	public void registerAuthenticationListener() {
-		// Nothing to do here
+		// No needs to authenticate
+		webSocket.onAuthentication();
 	}
 
 	@Override
