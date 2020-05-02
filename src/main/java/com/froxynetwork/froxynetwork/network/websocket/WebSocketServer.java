@@ -89,7 +89,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
 			conn.close();
 			return;
 		}
-		LOG.info("A server from {} is connected to the WebSocket",
+		LOG.info("A server from {} is connected",
 				conn.getRemoteSocketAddress().getAddress().getHostAddress());
 		WebSocketServerImpl wssi = (WebSocketServerImpl) conn;
 		servers.add(wssi);
@@ -105,7 +105,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
 					conn.getRemoteSocketAddress().getAddress().getHostAddress());
 			return;
 		}
-		LOG.info("A server from {} is connected to the WebSocket",
+		LOG.info("A server from {} has disconnected",
 				conn.getRemoteSocketAddress().getAddress().getHostAddress());
 		WebSocketServerImpl wssi = (WebSocketServerImpl) conn;
 		servers.remove(wssi);

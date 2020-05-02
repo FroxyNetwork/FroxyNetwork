@@ -1,5 +1,6 @@
 package com.froxynetwork.froxynetwork.network.websocket.auth;
 
+import org.java_websocket.framing.CloseFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,9 +96,12 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 
 				@Override
 				public void onReceive(String message) {
-					if (isAuthenticated())
+					LOG.debug("Server: GOT auth {}", message);
+					if (isAuthenticated()) {
 						// Say to the client that he's already authenticated
 						webSocket.sendCommand("auth", "");
+						return;
+					}
 					if (message == null || "".equalsIgnoreCase(message.trim()))
 						return;
 					String[] msgs = message.split(" ");
@@ -121,12 +125,16 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 
 								@Override
 								public void onFailure(RestException ex) {
-									LOG.error("Error while checking token {} for server {}", msgs[1], msgs[0]);
+									LOG.error("Error while checking token {} for server {}, closing it", msgs[1],
+											msgs[0]);
+									webSocket.disconnect(CloseFrame.NORMAL, "Error while checking token");
 								}
 
 								@Override
 								public void onFatalFailure(Throwable t) {
-									LOG.error("Fatal error while checking token {} for server {}", msgs[1], msgs[0]);
+									LOG.error("Fatal error while checking token {} for server {}, closing it", msgs[1],
+											msgs[0]);
+									webSocket.disconnect(CloseFrame.NORMAL, "Fatal error while checking token");
 								}
 							});
 				}
@@ -142,31 +150,33 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 		if (!webSocket.isClient())
 			return;
 		webSocket.registerWebSocketConnection(first -> {
+			if (authThread != null && authThread.isAlive())
+				authThread.interrupt();
 			authThread = new Thread(() -> {
-				while (!isAuthenticated() && !Thread.interrupted()) {
-					authenticate();
-					try {
+				try {
+					while (!isAuthenticated()) {
+						authenticate();
 						Thread.sleep(5000);
-					} catch (InterruptedException ex) {
 					}
+				} catch (InterruptedException ex) {
 				}
 			});
 			authThread.start();
+		});
+		webSocket.registerWebSocketDisconnection(remote -> {
+			if (authThread != null && authThread.isAlive())
+				authThread.interrupt();
 		});
 	}
 
 	@Override
 	public void stop() {
-		// Make a copy
-		Thread authThread = this.authThread;
-		if (authThread != null && authThread.isAlive())
-			new Thread(() -> {
-				authThread.interrupt();
-			}).start();
 	}
 
 	@Override
 	public void authenticate() {
+		LOG.debug("Authenticate(), authenticated = {}, isClient = {}, isConnected = {}", authenticated,
+				webSocket.isClient(), webSocket.isConnected());
 		if (authenticated || !webSocket.isClient() || !webSocket.isConnected())
 			return;
 		// Ask a token

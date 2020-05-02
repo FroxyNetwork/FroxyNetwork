@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.froxynetwork.froxynetwork.network.websocket.auth.WebSocketAuthentication;
+import com.froxynetwork.froxynetwork.network.websocket.modules.WebSocketModule;
 
 /**
  * MIT License
@@ -51,6 +52,7 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 	private WebSocketAuthentication authentication;
 	private HashMap<String, List<IWebSocketCommander>> listeners;
 	private HashMap<String, Object> saved;
+	private List<WebSocketModule> modules;
 
 	public WebSocketServerImpl(WebSocketListener listener, List<Draft> drafts, WebSocketAuthentication authentication) {
 		super(listener, drafts);
@@ -60,6 +62,7 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 		this.listenerAuthentication = new ArrayList<>();
 		this.listeners = new HashMap<>();
 		this.saved = new HashMap<>();
+		this.modules = new ArrayList<>();
 		authentication.init(this);
 		authentication.registerAuthenticationListener();
 	}
@@ -213,5 +216,21 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 	@Override
 	public Object get(String key) {
 		return saved.get(key);
+	}
+
+	@Override
+	public void addModule(WebSocketModule module) {
+		modules.add(module);
+		module.init(this);
+	}
+
+	@Override
+	public void removeModule(WebSocketModule module) {
+		modules.remove(module);
+		module.unload();
+	}
+
+	public List<WebSocketModule> getModules() {
+		return new ArrayList<>(modules);
 	}
 }

@@ -12,6 +12,7 @@ import com.froxynetwork.froxynetwork.network.websocket.WebSocketClientImpl;
 import com.froxynetwork.froxynetwork.network.websocket.WebSocketFactory;
 import com.froxynetwork.froxynetwork.network.websocket.WebSocketServer;
 import com.froxynetwork.froxynetwork.network.websocket.auth.WebSocketTokenAuthentication;
+import com.froxynetwork.froxynetwork.network.websocket.modules.WebSocketAutoReconnectModule;
 
 /**
  * MIT License
@@ -50,7 +51,7 @@ public class App {
 		// TODO URL in config file
 		String url = "http://0ddlyoko.alwaysdata.net";
 		String clientId = "VPS_01";
-		String clientSecret = "45498a26273a5136edd506e161b3e417";
+		String clientSecret = "<password>";
 		nm = new NetworkManager(url, clientId, clientSecret);
 		wss = WebSocketFactory.server(new InetSocketAddress("localhost", 25566), new WebSocketTokenAuthentication(nm));
 		wss.registerWebSocketConnection(wssi -> {
@@ -71,6 +72,7 @@ public class App {
 				public void onReceive(String message) {
 					System.out.println("Server: Got message ! name = test, message = " + message);
 					wssi.sendCommand("lol", "Heyy oui et toi ?");
+					wssi.disconnect();
 				}
 			});
 			wssi.registerWebSocketAuthentication(() -> {
@@ -105,6 +107,7 @@ public class App {
 				System.out.println("Client: Got message ! name = lol, message = " + message);
 			}
 		});
+		wsci.addModule(new WebSocketAutoReconnectModule(5 * 1000));
 		wsci.tryConnect();
 	}
 

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.froxynetwork.froxynetwork.network.websocket.auth.WebSocketAuthentication;
+import com.froxynetwork.froxynetwork.network.websocket.modules.WebSocketModule;
 
 /**
  * MIT License
@@ -56,6 +57,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	private Thread connectionThread;
 	protected boolean firstConnection = true;
 	private HashMap<String, Object> saved;
+	private List<WebSocketModule> modules;
 
 	public WebSocketClientImpl(URI uri, WebSocketAuthentication authentication) throws URISyntaxException {
 		super(uri);
@@ -66,6 +68,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 		this.listenerAuthentified = new ArrayList<>();
 		this.listeners = new HashMap<>();
 		this.saved = new HashMap<>();
+		this.modules = new ArrayList<>();
 		authentication.init(this);
 		authentication.registerAuthenticationListener();
 	}
@@ -93,18 +96,20 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 		if (connectionThread != null && connectionThread.isAlive())
 			connectionThread.interrupt();
 		connectionThread = new Thread(() -> {
+			// We'll try to connect 5 times to the WebSocket
+			boolean ok = false;
 			try {
-				// We'll try to connect 5 times to the WebSocket
-				boolean ok = false;
-				for (int i = 1; i <= 5 && !ok && !Thread.interrupted(); i++) {
+				for (int i = 1; i <= 5 && !ok; i++) {
 					LOG.info("Trying to connect #{}", i);
-					if (i == 1)
+					if (getSocket() == null)
 						ok = connectBlocking();
 					else
 						ok = reconnectBlocking();
 				}
 			} catch (InterruptedException ex) {
-				ex.printStackTrace();
+				// No needs to throw an error
+			} catch (Exception ex) {
+				LOG.error("Error while connecting to WebSocket: ", ex);
 			}
 		}, "WebSocketImpl-Connect");
 		connectionThread.start();
@@ -133,7 +138,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 				} catch (InterruptedException ex) {
 				}
 			}
-			connect();
+			tryConnect();
 		}, "WebSocketImpl-Reconnect").start();
 	}
 
@@ -141,12 +146,15 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	 * Interrupt the connection Thread if running
 	 */
 	public void stopThread() {
-		if (connectionThread != null && connectionThread.isAlive() && !connectionThread.isInterrupted())
+		if (connectionThread != null && connectionThread.isAlive() && !connectionThread.isInterrupted()) {
 			connectionThread.interrupt();
+			connectionThread = null;
+		}
 	}
 
 	@Override
 	public void disconnect() {
+		stopThread();
 		close();
 	}
 
@@ -297,5 +305,23 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	@Override
 	public Object get(String key) {
 		return saved.get(key);
+	}
+
+	@Override
+	public void addModule(WebSocketModule module) {
+		modules.add(module);
+		// Initialize & load module
+		module.init(this);
+		module.load();
+	}
+
+	@Override
+	public void removeModule(WebSocketModule module) {
+		modules.remove(module);
+		module.unload();
+	}
+
+	public List<WebSocketModule> getModules() {
+		return new ArrayList<>(modules);
 	}
 }

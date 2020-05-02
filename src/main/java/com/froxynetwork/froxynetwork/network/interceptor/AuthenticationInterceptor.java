@@ -97,7 +97,6 @@ public class AuthenticationInterceptor implements Interceptor {
 
 	private void askNewToken() {
 		for (int i = 0; i <= 10; i++) {
-			if (LOG.isInfoEnabled())
 				LOG.info("Asking a new Authentication token, try {}", i);
 			try {
 				retrofit2.Response<OAuth2> resp = oauth2Dao.askToken("client_credentials").execute();

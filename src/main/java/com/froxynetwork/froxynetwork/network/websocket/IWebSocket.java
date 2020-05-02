@@ -1,8 +1,11 @@
 package com.froxynetwork.froxynetwork.network.websocket;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.java_websocket.enums.ReadyState;
+
+import com.froxynetwork.froxynetwork.network.websocket.modules.WebSocketModule;
 
 /**
  * MIT License
@@ -174,4 +177,23 @@ public interface IWebSocket {
 	 * @return The object associated with this key
 	 */
 	public Object get(String key);
+
+	/**
+	 * Add specific module
+	 * 
+	 * @param module The module
+	 */
+	public void addModule(WebSocketModule module);
+
+	/**
+	 * Remove specific module
+	 * 
+	 * @param module The module
+	 */
+	public void removeModule(WebSocketModule module);
+
+	/**
+	 * @return All modules
+	 */
+	public List<WebSocketModule> getModules();
 }
