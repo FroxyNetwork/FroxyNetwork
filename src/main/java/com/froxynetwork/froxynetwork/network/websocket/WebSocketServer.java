@@ -74,7 +74,6 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
 						webSocket.disconnect(CloseFrame.NORMAL, "Authentication Timeout");
 					}
 				} catch (InterruptedException ex) {
-
 				}
 			}).start();
 		});
@@ -89,8 +88,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
 			conn.close();
 			return;
 		}
-		LOG.info("A server from {} is connected",
-				conn.getRemoteSocketAddress().getAddress().getHostAddress());
+		LOG.info("A server from {} is connected", conn.getRemoteSocketAddress().getAddress().getHostAddress());
 		WebSocketServerImpl wssi = (WebSocketServerImpl) conn;
 		servers.add(wssi);
 		for (Consumer<WebSocketServerImpl> c : listenerConnection)
@@ -105,8 +103,7 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
 					conn.getRemoteSocketAddress().getAddress().getHostAddress());
 			return;
 		}
-		LOG.info("A server from {} has disconnected",
-				conn.getRemoteSocketAddress().getAddress().getHostAddress());
+		LOG.info("A server from {} has disconnected", conn.getRemoteSocketAddress().getAddress().getHostAddress());
 		WebSocketServerImpl wssi = (WebSocketServerImpl) conn;
 		servers.remove(wssi);
 		for (Consumer<WebSocketServerImpl> c : listenerDisconnection)
@@ -132,10 +129,14 @@ public class WebSocketServer extends org.java_websocket.server.WebSocketServer {
 	public void onError(WebSocket conn, Exception ex) {
 		if (!(conn instanceof WebSocketServerImpl)) {
 			// Not a WebSocketServerImpl
+			String ip = (conn == null || conn.getRemoteSocketAddress() == null
+					|| conn.getRemoteSocketAddress().getAddress() == null) ? "?"
+							: conn.getRemoteSocketAddress().getAddress().getHostAddress();
 			LOG.warn("A server from {} got an error but client is not a WebSocketServerImpl class ! Closing it ...",
-					conn.getRemoteSocketAddress().getAddress().getHostAddress());
+					ip);
 			LOG.warn("", ex);
-			conn.close();
+			if (conn != null)
+				conn.close();
 			return;
 		}
 		WebSocketServerImpl wssi = (WebSocketServerImpl) conn;

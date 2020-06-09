@@ -70,9 +70,9 @@ public final class NetworkManager {
 	public final void shutdown() {
 		if (LOG.isDebugEnabled())
 			LOG.debug("Shutting down okHttp");
-		okHttpClient.dispatcher().executorService().shutdown();
+		okHttpClient.dispatcher().executorService().shutdownNow();
 	}
-	
+
 	public boolean isTokenExpired() {
 		return authenticationInterceptor.isTokenExpired();
 	}

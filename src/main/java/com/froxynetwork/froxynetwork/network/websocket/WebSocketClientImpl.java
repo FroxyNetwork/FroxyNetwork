@@ -58,6 +58,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	protected boolean firstConnection = true;
 	private HashMap<String, Object> saved;
 	private List<WebSocketModule> modules;
+	private boolean closed = false;
 
 	public WebSocketClientImpl(URI uri, WebSocketAuthentication authentication) throws URISyntaxException {
 		super(uri);
@@ -85,10 +86,14 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 
 	/**
 	 * Try to connect to WebSocket.<br />
+	 * If this client is closed (A call to {@link #closeAll()} has been done), do
+	 * not reconnect<br />
 	 * This will create a new Thread and will try to connect 5 times to a WebSocket
 	 * server
 	 */
 	public void tryConnect() {
+		if (closed)
+			return;
 		// We don't want to reconnect if we're already connected
 		if (isConnected())
 			return;
@@ -117,6 +122,8 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 
 	/**
 	 * Disconnect if already connected and reconnect again.<br />
+	 * If this client is closed (A call to {@link #closeAll()} has been done), do
+	 * not reconnect<br />
 	 * This method create a new Thread
 	 * 
 	 * @see #registerWebSocketDisconnection(Consumer)
@@ -127,6 +134,8 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	 * @param token    The token of the server
 	 */
 	public void reconnect() {
+		if (closed)
+			return;
 		// Async
 		new Thread(() -> {
 			LOG.info("Reconnecting ...");
@@ -136,6 +145,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 					closeBlocking();
 					LOG.info("Disconnected");
 				} catch (InterruptedException ex) {
+					break;
 				}
 			}
 			tryConnect();
@@ -219,7 +229,8 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 
 	@Override
 	public void sendCommand(String channel, String message) {
-		super.send(channel + " " + message);
+		LOG.debug("WebSocketClientImpl: sending {} {}", channel, message);
+		super.send(channel + (message == null || message.isEmpty() ? "" : " " + message));
 	}
 
 	@Override
@@ -319,6 +330,14 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 	public void removeModule(WebSocketModule module) {
 		modules.remove(module);
 		module.unload();
+	}
+
+	@Override
+	public void closeAll() {
+		closed = true;
+		for (WebSocketModule module : modules)
+			module.unload();
+		modules = new ArrayList<>();
 	}
 
 	public List<WebSocketModule> getModules() {

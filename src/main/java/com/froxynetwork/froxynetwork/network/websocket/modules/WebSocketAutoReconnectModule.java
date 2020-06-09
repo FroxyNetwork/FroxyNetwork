@@ -57,9 +57,8 @@ public class WebSocketAutoReconnectModule implements WebSocketModule {
 				try {
 					Thread.sleep(time);
 				} catch (InterruptedException ex) {
+					break;
 				}
-				if (Thread.interrupted())
-					return;
 				if (!webSocket.isConnected()) {
 					// Not connected
 					wssi.reconnect();
@@ -73,7 +72,7 @@ public class WebSocketAutoReconnectModule implements WebSocketModule {
 	public void unload() {
 		if (!webSocket.isClient())
 			return;
-		if (thread != null && thread.isAlive()) {
+		if (thread != null) {
 			thread.interrupt();
 			thread = null;
 		}

@@ -64,8 +64,9 @@ public final class ServiceHelper {
 						// (Normally) impossible
 						LOG.debug("Failure: " + body.toString());
 						callback.onFailure(new RestException(body));
-					} else
+					} else {
 						callback.onResponse(body.getData());
+					}
 				}
 			}
 

@@ -51,30 +51,16 @@ public class ServerService {
 		serverDao = retrofit.create(ServerDao.class);
 	}
 
-	/**
-	 * Call <code>asyncGetServer(id, Type.ALL, callback);</code>
-	 */
 	public void asyncGetServer(String id, Callback<Server> callback) {
-		asyncGetServer(id, Type.ALL, callback);
-	}
-
-	/**
-	 * Call <code>syncGetServer(id, Type.ALL);</code>
-	 */
-	public Server syncGetServer(String id) throws RestException, Exception {
-		return syncGetServer(id, Type.ALL);
-	}
-
-	public void asyncGetServer(String id, Type type, Callback<Server> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncGetServer: Retrieving server {}", id);
-		serverDao.getServer(id, type.getType()).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
+		serverDao.getServer(id).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
-	public Server syncGetServer(String id, Type type) throws RestException, Exception {
+	public Server syncGetServer(String id) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncGetServer: Retrieving server {}", id);
-		Response<ServerDataOutput> response = serverDao.getServer(id, type.getType()).execute();
+		Response<ServerDataOutput> response = serverDao.getServer(id).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
@@ -83,15 +69,23 @@ public class ServerService {
 	}
 
 	public void asyncGetServers(Callback<ServerList> callback) {
-		if (LOG.isDebugEnabled())
-			LOG.debug("asyncGetServers: Retrieving all servers");
-		serverDao.getServers().enqueue(ServiceHelper.callback(callback, ServerListDataOutput.class));
+		asyncGetServers(Type.ALL, callback);
 	}
 
 	public ServerList syncGetServers() throws RestException, Exception {
+		return syncGetServers(Type.ALL);
+	}
+
+	public void asyncGetServers(Type type, Callback<ServerList> callback) {
+		if (LOG.isDebugEnabled())
+			LOG.debug("asyncGetServers: Retrieving all servers");
+		serverDao.getServers(type.type).enqueue(ServiceHelper.callback(callback, ServerListDataOutput.class));
+	}
+
+	public ServerList syncGetServers(Type type) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncGetServers: Retrieving all servers");
-		Response<ServerListDataOutput> response = serverDao.getServers().execute();
+		Response<ServerListDataOutput> response = serverDao.getServers(type.type).execute();
 		ServerListDataOutput body = ServiceHelper.response(response, ServerListDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);

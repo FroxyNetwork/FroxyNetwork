@@ -9,6 +9,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -49,15 +50,18 @@ public interface ServerDao {
 	 * @return Specific server if exists
 	 */
 	@GET("server/{id}")
-	public Call<ServerDataOutput> getServer(@Path("id") String id, @Field("type") int type);
+	public Call<ServerDataOutput> getServer(@Path("id") String id);
 
 	/**
 	 * Get all server connected
 	 * 
+	 * @param type The type of server to return
+	 * 
 	 * @return a list of all server connected
 	 */
 	@GET("server")
-	public Call<ServerListDataOutput> getServers();
+	@FormUrlEncoded
+	public Call<ServerListDataOutput> getServers(@Field("type") int type);
 
 	/**
 	 * Register a new server to the REST service

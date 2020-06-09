@@ -49,6 +49,8 @@ public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOu
 		private String id;
 		private String[] database;
 		private ServerConfig[] variants;
+		private int min;
+		private int max;
 	}
 
 	@Data
@@ -56,9 +58,17 @@ public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOu
 	@AllArgsConstructor
 	public static class VpsConfig {
 		private String id;
-		private String host;
-		private int port;
 		@SerializedName("max_servers")
 		private int maxServers;
+		private VpsConfigConfig[] config;
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class VpsConfigConfig {
+		private String type;
+		private int min;
+		private int max;
 	}
 }

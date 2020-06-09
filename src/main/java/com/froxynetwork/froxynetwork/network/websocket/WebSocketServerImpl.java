@@ -151,8 +151,9 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 	}
 
 	@Override
-	public void sendCommand(String channel, String msg) {
-		super.send(channel + " " + msg);
+	public void sendCommand(String channel, String message) {
+		LOG.debug("WebSocketServerImpl: sending {} {}", channel, message);
+		super.send(channel + (message == null || message.isEmpty() ? "" : " " + message));
 	}
 
 	@Override
@@ -228,6 +229,13 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 	public void removeModule(WebSocketModule module) {
 		modules.remove(module);
 		module.unload();
+	}
+
+	@Override
+	public void closeAll() {
+		for (WebSocketModule module : modules)
+			module.unload();
+		modules = new ArrayList<>();
 	}
 
 	public List<WebSocketModule> getModules() {

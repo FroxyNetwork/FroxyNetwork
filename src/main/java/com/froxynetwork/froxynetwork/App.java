@@ -51,7 +51,7 @@ public class App {
 		// TODO URL in config file
 		String url = "http://0ddlyoko.alwaysdata.net";
 		String clientId = "VPS_01";
-		String clientSecret = "<password>";
+		String clientSecret = "<id>";
 		nm = new NetworkManager(url, clientId, clientSecret);
 		wss = WebSocketFactory.server(new InetSocketAddress("localhost", 25566), new WebSocketTokenAuthentication(nm));
 		wss.registerWebSocketConnection(wssi -> {
@@ -109,6 +109,16 @@ public class App {
 		});
 		wsci.addModule(new WebSocketAutoReconnectModule(5 * 1000));
 		wsci.tryConnect();
+		new Thread(() -> {
+			while (true) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException ex) {
+					break;
+				}
+				System.out.println("Number of Threads: " + Thread.activeCount());
+			}
+		}).start();
 	}
 
 	public static void main(String[] args) throws Exception {

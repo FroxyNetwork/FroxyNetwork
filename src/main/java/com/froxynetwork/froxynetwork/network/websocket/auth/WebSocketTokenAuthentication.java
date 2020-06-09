@@ -201,7 +201,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 
 					@Override
 					public void onFatalFailure(Throwable t) {
-						LOG.error("Fatal error whiel asking for a token: ", t);
+						LOG.error("Fatal error while asking for a token: ", t);
 					}
 				});
 	}

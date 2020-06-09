@@ -196,4 +196,9 @@ public interface IWebSocket {
 	 * @return All modules
 	 */
 	public List<WebSocketModule> getModules();
+
+	/**
+	 * Disconnect this webSocket and unload modules
+	 */
+	public void closeAll();
 }
