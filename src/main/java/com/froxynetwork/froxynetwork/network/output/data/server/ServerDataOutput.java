@@ -44,6 +44,7 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private String name;
 		private String type;
 		private String vps;
+		private String ip;
 		private int port;
 		private String status;
 		private Date creationTime;

@@ -93,18 +93,20 @@ public class ServerService {
 			return body.getData();
 	}
 
-	public void asyncAddServer(String name, String type, int port, Callback<Server> callback) {
+	public void asyncAddServer(String name, String type, String ip, int port, Callback<Server> callback) {
 		if (LOG.isDebugEnabled())
-			LOG.debug("asyncAddServer: Adding new server, name = {}, type = {}, port = {}", name, type, port);
-		serverDao.createServer(new Server("", name, type, null, port, null, null, null, null))
+			LOG.debug("asyncAddServer: Adding new server, name = {}, type = {}, ip = {}, port = {}", name, type, ip,
+					port);
+		serverDao.createServer(new Server("", name, type, null, ip, port, null, null, null, null))
 				.enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
-	public Server syncAddServer(String name, String type, int port) throws RestException, Exception {
+	public Server syncAddServer(String name, String type, String ip, int port) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
-			LOG.debug("syncAddServer: Adding new server, name = {}, type = {}, port = {}", name, type, port);
+			LOG.debug("syncAddServer: Adding new server, name = {}, type = {}, ip = {}, port = {}", name, type, ip,
+					port);
 		Response<ServerDataOutput> response = serverDao
-				.createServer(new Server("", name, type, null, port, null, null, null, null)).execute();
+				.createServer(new Server("", name, type, null, ip, port, null, null, null, null)).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
