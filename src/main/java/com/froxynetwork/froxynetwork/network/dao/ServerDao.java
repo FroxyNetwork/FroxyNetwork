@@ -15,6 +15,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * MIT License
@@ -60,8 +61,7 @@ public interface ServerDao {
 	 * @return a list of all server connected
 	 */
 	@GET("server")
-	@FormUrlEncoded
-	public Call<ServerListDataOutput> getServers(@Field("type") int type);
+	public Call<ServerListDataOutput> getServers(@Query("type") int type);
 
 	/**
 	 * Register a new server to the REST service

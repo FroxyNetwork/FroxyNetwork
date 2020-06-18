@@ -78,13 +78,13 @@ public class ServerService {
 
 	public void asyncGetServers(Type type, Callback<ServerList> callback) {
 		if (LOG.isDebugEnabled())
-			LOG.debug("asyncGetServers: Retrieving all servers");
+			LOG.debug("asyncGetServers: Retrieving servers {}", type.name());
 		serverDao.getServers(type.type).enqueue(ServiceHelper.callback(callback, ServerListDataOutput.class));
 	}
 
 	public ServerList syncGetServers(Type type) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
-			LOG.debug("syncGetServers: Retrieving all servers");
+			LOG.debug("syncGetServers: Retrieving servers {}", type.name());
 		Response<ServerListDataOutput> response = serverDao.getServers(type.type).execute();
 		ServerListDataOutput body = ServiceHelper.response(response, ServerListDataOutput.class);
 		if (body.isError())
