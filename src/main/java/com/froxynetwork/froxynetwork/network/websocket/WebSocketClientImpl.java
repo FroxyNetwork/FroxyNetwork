@@ -71,7 +71,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 		this.saved = new HashMap<>();
 		this.modules = new ArrayList<>();
 		authentication.init(this);
-		authentication.registerAuthenticationListener();
+		authentication.registerAuthenticationListener(this);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 
 	@Override
 	public boolean isAuthenticated() {
-		return isConnected() && authentication.isAuthenticated();
+		return isConnected() && authentication.isAuthenticated(this);
 	}
 
 	/**
@@ -270,7 +270,7 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 		// Test if it's not already authenticated
 		if (isAuthenticated())
 			return;
-		authentication.authenticate();
+		authentication.authenticate(this);
 	}
 
 	@Override
@@ -305,7 +305,8 @@ public class WebSocketClientImpl extends WebSocketClient implements IWebSocket {
 
 	@Override
 	public void onError(Exception ex) {
-		LOG.error("Error: ", ex);
+		LOG.error("Error: {}", ex.getMessage());
+		LOG.debug("Full error:", ex);
 	}
 
 	@Override

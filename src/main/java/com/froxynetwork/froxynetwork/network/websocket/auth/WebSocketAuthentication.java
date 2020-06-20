@@ -45,24 +45,24 @@ public interface WebSocketAuthentication {
 	 * events that will result in a call to {@link #authentificate()}<br />
 	 * Example: Register connection event and call {@linkplain #authentificate()}
 	 */
-	public void registerAuthenticationListener();
+	public void registerAuthenticationListener(IWebSocket webSocket);
 
 	/**
 	 * Authentificate this WebSocket
 	 * 
 	 * @param webSocket The WebSocket
 	 */
-	public void authenticate();
+	public void authenticate(IWebSocket webSocket);
 
 	/**
 	 * @return true if this WebSocket is authentificated
 	 */
-	public boolean isAuthenticated();
+	public boolean isAuthenticated(IWebSocket webSocket);
 
 	/**
 	 * Called when this WebSocket is stopped and will not be reused
 	 */
-	public default void stop() {
+	public default void stop(IWebSocket webSocket) {
 		// Nothing to do
 	}
 }

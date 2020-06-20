@@ -64,7 +64,7 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 		this.saved = new HashMap<>();
 		this.modules = new ArrayList<>();
 		authentication.init(this);
-		authentication.registerAuthenticationListener();
+		authentication.registerAuthenticationListener(this);
 	}
 
 	public WebSocketServerImpl(WebSocketListener listener, Draft d, WebSocketAuthentication authentication) {
@@ -84,7 +84,7 @@ public class WebSocketServerImpl extends WebSocketImpl implements IWebSocket {
 
 	@Override
 	public boolean isAuthenticated() {
-		return isConnected() && authentication.isAuthenticated();
+		return isConnected() && authentication.isAuthenticated(this);
 	}
 
 	@Override

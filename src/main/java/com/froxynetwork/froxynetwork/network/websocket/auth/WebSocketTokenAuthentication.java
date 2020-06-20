@@ -43,22 +43,18 @@ import com.froxynetwork.froxynetwork.network.websocket.IWebSocketCommander;
 public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 	private final Logger LOG = LoggerFactory.getLogger(getClass());
 	public static final String TOKEN = "TOKEN_ID";
+	public static final String AUTHTHREAD = "AUTH_THREAD";
+	public static final String AUTHENTICATED = "AUTHENTICATED";
 
 	private NetworkManager networkManager;
-	private IWebSocket webSocket;
-	private Thread authThread;
-	private boolean authenticated;
-
-	private String id;
 
 	public WebSocketTokenAuthentication(NetworkManager networkManager) {
 		this.networkManager = networkManager;
-		this.authenticated = false;
 	}
 
 	@Override
 	public void init(IWebSocket webSocket) {
-		this.webSocket = webSocket;
+		webSocket.save(AUTHENTICATED, false);
 		if (webSocket.isClient()) {
 			// This webSocket is the client
 			webSocket.registerCommand(new IWebSocketCommander() {
@@ -75,8 +71,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 
 				@Override
 				public void onReceive(String message) {
-					authenticated = true;
-					webSocket.save(TOKEN, id);
+					webSocket.save(AUTHENTICATED, true);
 					// Fire event
 					webSocket.onAuthentication();
 				}
@@ -97,7 +92,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 				@Override
 				public void onReceive(String message) {
 					LOG.debug("Server: GOT auth {}", message);
-					if (isAuthenticated()) {
+					if (isAuthenticated(webSocket)) {
 						// Say to the client that he's already authenticated
 						webSocket.sendCommand("auth", "");
 						return;
@@ -113,7 +108,7 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 								@Override
 								public void onResponse(ServerTester response) {
 									if (response.isOk()) {
-										authenticated = true;
+										webSocket.save(AUTHENTICATED, true);
 										// Save
 										webSocket.save(TOKEN, msgs[0]);
 										// Say that this server is authenticated
@@ -141,40 +136,47 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 			});
 		}
 		webSocket.registerWebSocketDisconnection(remote -> {
-			authenticated = false;
+			webSocket.save(AUTHENTICATED, false);
 		});
 	}
 
 	@Override
-	public void registerAuthenticationListener() {
+	public void registerAuthenticationListener(IWebSocket webSocket) {
 		if (!webSocket.isClient())
 			return;
 		webSocket.registerWebSocketConnection(first -> {
+			Object obj = webSocket.get(AUTHTHREAD);
+			Thread authThread = (obj == null) ? null : (Thread) obj;
 			if (authThread != null && authThread.isAlive())
 				authThread.interrupt();
 			authThread = new Thread(() -> {
 				try {
-					while (!isAuthenticated()) {
-						authenticate();
+					while (!isAuthenticated(webSocket)) {
+						authenticate(webSocket);
 						Thread.sleep(5000);
 					}
 				} catch (InterruptedException ex) {
 				}
 			});
 			authThread.start();
+			webSocket.save(AUTHTHREAD, authThread);
 		});
 		webSocket.registerWebSocketDisconnection(remote -> {
+			Object obj = webSocket.get(AUTHTHREAD);
+			Thread authThread = (obj == null) ? null : (Thread) obj;
 			if (authThread != null && authThread.isAlive())
 				authThread.interrupt();
 		});
 	}
 
 	@Override
-	public void stop() {
+	public void stop(IWebSocket webSocket) {
 	}
 
 	@Override
-	public void authenticate() {
+	public void authenticate(IWebSocket webSocket) {
+		Object auth = webSocket.get(AUTHENTICATED);
+		boolean authenticated = auth != null && (boolean) auth;
 		LOG.debug("Authenticate(), authenticated = {}, isClient = {}, isConnected = {}", authenticated,
 				webSocket.isClient(), webSocket.isConnected());
 		if (authenticated || !webSocket.isClient() || !webSocket.isConnected())
@@ -185,7 +187,8 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 
 					@Override
 					public void onResponse(ServerTester response) {
-						id = response.getId();
+						String id = response.getId();
+						webSocket.save(TOKEN, id);
 						String token = response.getToken();
 						if (webSocket.isConnected()) {
 							// Send auth command
@@ -207,7 +210,8 @@ public class WebSocketTokenAuthentication implements WebSocketAuthentication {
 	}
 
 	@Override
-	public boolean isAuthenticated() {
-		return authenticated;
+	public boolean isAuthenticated(IWebSocket webSocket) {
+		Object auth = webSocket.get(AUTHENTICATED);
+		return auth != null && (boolean) auth;
 	}
 }
