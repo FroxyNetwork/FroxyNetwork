@@ -1,8 +1,5 @@
 package com.froxynetwork.froxynetwork.network.output.data;
 
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,31 +28,22 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+public class ServerTesterDataOutput extends GeneralDataOutput<ServerTesterDataOutput.ServerTester> {
 
 	@Data
 	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
+	public static class ServerTester {
+		private boolean ok;
 		private String id;
-		private String name;
-		private String type;
+		private String token;
+
+		public ServerTester(boolean ok) {
+			this.ok = ok;
+		}
+
+		public ServerTester(String id, String token) {
+			this.id = id;
+			this.token = token;
+		}
 	}
 }

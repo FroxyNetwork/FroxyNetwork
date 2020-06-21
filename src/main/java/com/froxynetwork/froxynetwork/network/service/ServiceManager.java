@@ -36,8 +36,16 @@ public final class ServiceManager {
 	@Getter
 	private ServerService serverService;
 
+	@Getter
+	private ServerConfigService serverConfigService;
+
+	@Getter
+	private ServerTesterService serverTesterService;
+
 	public ServiceManager(Retrofit retrofit) {
 		playerService = new PlayerService(retrofit);
 		serverService = new ServerService(retrofit);
+		serverConfigService = new ServerConfigService(retrofit);
+		serverTesterService = new ServerTesterService(retrofit);
 	}
 }

@@ -1,15 +1,11 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.websocket.modules;
 
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
 
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,31 +27,27 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+public interface WebSocketModule {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
+	/**
+	 * @return The name of this module
+	 */
+	public String getName();
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
-	}
+	/**
+	 * Initialize this module
+	 * 
+	 * @param webSocket The WebSocket associated to this Authentication
+	 */
+	public void init(IWebSocket webSocket);
+
+	/**
+	 * Load this module
+	 */
+	public void load();
+
+	/**
+	 * Unload this module
+	 */
+	public void unload();
 }

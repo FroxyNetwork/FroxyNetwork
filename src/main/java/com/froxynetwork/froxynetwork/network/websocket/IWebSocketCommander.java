@@ -1,10 +1,4 @@
-package com.froxynetwork.froxynetwork.network.output.data;
-
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.froxynetwork.froxynetwork.network.websocket;
 
 /**
  * MIT License
@@ -31,31 +25,26 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+/**
+ * Used to register new commands to execute once a message is received
+ */
+public interface IWebSocketCommander {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
+	/**
+	 * @return The name of the command
+	 */
+	public String name();
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
-	}
+	/**
+	 * @return The description of the command
+	 */
+	public String description();
+
+	/**
+	 * Action to execute once the message is received
+	 * 
+	 * @param message The message
+	 */
+
+	public void onReceive(String message);
 }

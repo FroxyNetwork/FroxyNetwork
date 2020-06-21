@@ -1,6 +1,7 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.output.data.server.config;
 
-import java.util.Date;
+import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
+import com.google.gson.annotations.SerializedName;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,31 +32,43 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOutput.ServersConfig> {
 
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
+	public static class ServersConfig {
+		private ServerConfig[] types;
+		private VpsConfig[] vps;
 	}
 
 	@Data
 	@NoArgsConstructor
 	@AllArgsConstructor
-	public static class Server {
+	public static class ServerConfig {
 		private String id;
-		private String name;
+		private String[] database;
+		private ServerConfig[] variants;
+		private int min;
+		private int max;
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class VpsConfig {
+		private String id;
+		@SerializedName("max_servers")
+		private int maxServers;
+		private VpsConfigConfig[] config;
+	}
+
+	@Data
+	@NoArgsConstructor
+	@AllArgsConstructor
+	public static class VpsConfigConfig {
 		private String type;
+		private int min;
+		private int max;
 	}
 }

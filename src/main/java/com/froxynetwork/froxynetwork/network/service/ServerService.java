@@ -51,13 +51,13 @@ public class ServerService {
 		serverDao = retrofit.create(ServerDao.class);
 	}
 
-	public void asyncGetServer(int id, Callback<Server> callback) {
+	public void asyncGetServer(String id, Callback<Server> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncGetServer: Retrieving server {}", id);
 		serverDao.getServer(id).enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
-	public Server syncGetServer(int id) throws RestException, Exception {
+	public Server syncGetServer(String id) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncGetServer: Retrieving server {}", id);
 		Response<ServerDataOutput> response = serverDao.getServer(id).execute();
@@ -69,15 +69,23 @@ public class ServerService {
 	}
 
 	public void asyncGetServers(Callback<ServerList> callback) {
-		if (LOG.isDebugEnabled())
-			LOG.debug("asyncGetServers: Retrieving all servers");
-		serverDao.getServers().enqueue(ServiceHelper.callback(callback, ServerListDataOutput.class));
+		asyncGetServers(Type.ALL, callback);
 	}
 
 	public ServerList syncGetServers() throws RestException, Exception {
+		return syncGetServers(Type.ALL);
+	}
+
+	public void asyncGetServers(Type type, Callback<ServerList> callback) {
 		if (LOG.isDebugEnabled())
-			LOG.debug("syncGetServers: Retrieving all servers");
-		Response<ServerListDataOutput> response = serverDao.getServers().execute();
+			LOG.debug("asyncGetServers: Retrieving servers {}", type.name());
+		serverDao.getServers(type.type).enqueue(ServiceHelper.callback(callback, ServerListDataOutput.class));
+	}
+
+	public ServerList syncGetServers(Type type) throws RestException, Exception {
+		if (LOG.isDebugEnabled())
+			LOG.debug("syncGetServers: Retrieving servers {}", type.name());
+		Response<ServerListDataOutput> response = serverDao.getServers(type.type).execute();
 		ServerListDataOutput body = ServiceHelper.response(response, ServerListDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
@@ -85,17 +93,20 @@ public class ServerService {
 			return body.getData();
 	}
 
-	public void asyncAddServer(String name, int port, Callback<Server> callback) {
+	public void asyncAddServer(String name, String type, String ip, int port, Callback<Server> callback) {
 		if (LOG.isDebugEnabled())
-			LOG.debug("asyncAddServer: Adding new server, name = {}, port = {}", name, port);
-		serverDao.createServer(new Server(0, name, port, null, null, null))
+			LOG.debug("asyncAddServer: Adding new server, name = {}, type = {}, ip = {}, port = {}", name, type, ip,
+					port);
+		serverDao.createServer(new Server("", name, type, null, ip, port, null, null, null, null))
 				.enqueue(ServiceHelper.callback(callback, ServerDataOutput.class));
 	}
 
-	public Server syncAddServer(String name, int port) throws RestException, Exception {
+	public Server syncAddServer(String name, String type, String ip, int port) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
-			LOG.debug("syncAddServer: Adding new server, name = {}, port = {}", name, port);
-		Response<ServerDataOutput> response = serverDao.createServer(new Server(0, name, port, null, null, null)).execute();
+			LOG.debug("syncAddServer: Adding new server, name = {}, type = {}, ip = {}, port = {}", name, type, ip,
+					port);
+		Response<ServerDataOutput> response = serverDao
+				.createServer(new Server("", name, type, null, ip, port, null, null, null, null)).execute();
 		ServerDataOutput body = ServiceHelper.response(response, ServerDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);
@@ -123,13 +134,13 @@ public class ServerService {
 			return body.getData();
 	}
 
-	public void asyncDeleteServer(int id, Callback<Empty> callback) {
+	public void asyncDeleteServer(String id, Callback<Empty> callback) {
 		if (LOG.isDebugEnabled())
 			LOG.debug("asyncDeleteServer: Deleting Server {}", id);
 		serverDao.deleteServer(id).enqueue(ServiceHelper.callback(callback, EmptyDataOutput.class));
 	}
 
-	public Empty syncDeleteServer(int id) throws RestException, Exception {
+	public Empty syncDeleteServer(String id) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
 			LOG.debug("syncDeleteServer: Deleting Server {}", id);
 		Response<EmptyDataOutput> response = serverDao.deleteServer(id).execute();
@@ -138,5 +149,19 @@ public class ServerService {
 			throw new RestException(body);
 		else
 			return body.getData();
+	}
+
+	public enum Type {
+		SERVER(1), BUNGEE(2), ALL(3);
+
+		private int type;
+
+		private Type(int type) {
+			this.type = type;
+		}
+
+		public int getType() {
+			return type;
+		}
 	}
 }

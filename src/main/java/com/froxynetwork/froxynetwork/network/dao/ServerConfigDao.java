@@ -1,10 +1,10 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.dao;
 
-import java.util.Date;
+import com.froxynetwork.froxynetwork.network.output.data.server.config.ServerConfigDataOutput;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 /**
  * MIT License
@@ -31,31 +31,16 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+public interface ServerConfigDao {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
+	/**
+	 * Get the configuration of the REST server
+	 * 
+	 * @return The configuration of the REST server
+	 */
+	@GET("server/config")
+	public Call<ServerConfigDataOutput> getServerConfig();
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
-	}
+	@GET("server/config/{type}")
+	public Call<ServerConfigDataOutput> getServerConfig(@Path("type") String type);
 }

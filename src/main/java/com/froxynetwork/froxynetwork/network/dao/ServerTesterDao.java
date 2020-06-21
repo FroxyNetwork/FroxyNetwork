@@ -1,10 +1,12 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.dao;
 
-import java.util.Date;
+import com.froxynetwork.froxynetwork.network.output.data.ServerTesterDataOutput;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * MIT License
@@ -31,31 +33,23 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+public interface ServerTesterDao {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
-	}
+	/**
+	 * Test if specific token is linked with specific id
+	 * 
+	 * @param id    The id of the server to check
+	 * @param token The token
+	 * @return Specific server if exists
+	 */
+	@GET("server/tester/{id}")
+	public Call<ServerTesterDataOutput> check(@Path("id") String id, @Query("token") String token);
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
-	}
+	/**
+	 * Ask a new token
+	 * 
+	 * @return The token
+	 */
+	@POST("server/tester/")
+	public Call<ServerTesterDataOutput> ask();
 }

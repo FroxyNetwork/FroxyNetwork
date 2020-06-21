@@ -1,10 +1,10 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.websocket;
 
-import java.util.Date;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.froxynetwork.froxynetwork.network.websocket.auth.WebSocketAuthentication;
 
 /**
  * MIT License
@@ -31,31 +31,18 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+/**
+ * WebSocket Factory<br />
+ * Be the client or the server !
+ */
+public class WebSocketFactory {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
+	public static WebSocketClientImpl client(URI uri, WebSocketAuthentication webSocketAuthentication)
+			throws URISyntaxException {
+		return new WebSocketClientImpl(uri, webSocketAuthentication);
 	}
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
+	public static WebSocketServer server(InetSocketAddress address, WebSocketAuthentication webSocketAuthentication) {
+		return new WebSocketServer(address, webSocketAuthentication);
 	}
 }

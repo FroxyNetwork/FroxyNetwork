@@ -8,11 +8,14 @@ import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOu
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * MIT License
@@ -44,26 +47,26 @@ public interface ServerDao {
 	/**
 	 * Get a server from his id
 	 * 
-	 * @param id
-	 *            The id of the server
+	 * @param id The id of the server
 	 * @return Specific server if exists
 	 */
 	@GET("server/{id}")
-	public Call<ServerDataOutput> getServer(@Path("id") int id);
+	public Call<ServerDataOutput> getServer(@Path("id") String id);
 
 	/**
 	 * Get all server connected
 	 * 
+	 * @param type The type of server to return
+	 * 
 	 * @return a list of all server connected
 	 */
 	@GET("server")
-	public Call<ServerListDataOutput> getServers();
+	public Call<ServerListDataOutput> getServers(@Query("type") int type);
 
 	/**
 	 * Register a new server to the REST service
 	 * 
-	 * @param server
-	 *            The server
+	 * @param server The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
@@ -73,23 +76,20 @@ public interface ServerDao {
 	/**
 	 * Edit an existing server to the REST service
 	 * 
-	 * @param id
-	 *            The id of the server
-	 * @param server
-	 *            The server
+	 * @param id     The id of the server
+	 * @param server The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
 	@PUT("server/{id}")
-	public Call<ServerDataOutput> updateServer(@Path("id") int id, @Body Server server);
+	public Call<ServerDataOutput> updateServer(@Path("id") String id, @Body Server server);
 
 	/**
 	 * Delete (close) an existing server to the REST service
 	 * 
-	 * @param id
-	 *            The id of the server
+	 * @param id The id of the server
 	 * @return The response
 	 */
 	@DELETE("server/{id}")
-	public Call<EmptyDataOutput> deleteServer(@Path("id") int id);
+	public Call<EmptyDataOutput> deleteServer(@Path("id") String id);
 }

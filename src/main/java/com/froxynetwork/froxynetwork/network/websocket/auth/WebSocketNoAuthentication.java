@@ -1,15 +1,11 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.websocket.auth;
 
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
 
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,31 +27,28 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player> {
+/**
+ * Use this class if you don't need authentication
+ */
+public class WebSocketNoAuthentication implements WebSocketAuthentication {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Player {
-		private String uuid;
-		private String nickname;
-		private String displayName;
-		private int coins;
-		private int level;
-		private int exp;
-		private Date firstLogin;
-		private Date lastLogin;
-		private String ip;
-		private String lang;
-		private Server server;
+	@Override
+	public void init(IWebSocket webSocket) {
 	}
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class Server {
-		private String id;
-		private String name;
-		private String type;
+	@Override
+	public void registerAuthenticationListener(IWebSocket webSocket) {
+		// No needs to authenticate
+		webSocket.onAuthentication();
+	}
+
+	@Override
+	public void authenticate(IWebSocket webSocket) {
+		// Don't need to authenticate
+	}
+
+	@Override
+	public boolean isAuthenticated(IWebSocket webSocket) {
+		return true;
 	}
 }

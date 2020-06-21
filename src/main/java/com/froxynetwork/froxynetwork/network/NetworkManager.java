@@ -42,17 +42,20 @@ public final class NetworkManager {
 	private final OkHttpClient okHttpClient;
 	private final Retrofit retrofit;
 	private final ServiceManager serviceManager;
+	private final AuthenticationInterceptor authenticationInterceptor;
 
 	public NetworkManager(String url, String clientId, String clientSecret) {
-		okHttpClient = new OkHttpClient.Builder()
-				.addInterceptor(new AuthenticationInterceptor(Credentials.basic(clientId, clientSecret), url)).build();
+		okHttpClient = new OkHttpClient.Builder().addInterceptor(
+				authenticationInterceptor = new AuthenticationInterceptor(Credentials.basic(clientId, clientSecret),
+						url))
+				.build();
 		retrofit = new Retrofit.Builder()
 				.addConverterFactory(
 						GsonConverterFactory.create(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()))
 				.client(okHttpClient).baseUrl(url).build();
 		serviceManager = new ServiceManager(retrofit);
 	}
-	
+
 	public final ServiceManager network() {
 		return serviceManager;
 	}
@@ -67,6 +70,10 @@ public final class NetworkManager {
 	public final void shutdown() {
 		if (LOG.isDebugEnabled())
 			LOG.debug("Shutting down okHttp");
-		okHttpClient.dispatcher().executorService().shutdown();
+		okHttpClient.dispatcher().executorService().shutdownNow();
+	}
+
+	public boolean isTokenExpired() {
+		return authenticationInterceptor.isTokenExpired();
 	}
 }
