@@ -62,9 +62,8 @@ public class AuthenticationInterceptor implements Interceptor {
 	private Date expirationDate;
 
 	/**
-	 * @param clientCredential
-	 *            The clientCredential, provided by
-	 *            {@link Credentials#basic(String, String)}
+	 * @param clientCredential The clientCredential, provided by
+	 *                         {@link Credentials#basic(String, String)}
 	 */
 	public AuthenticationInterceptor(String clientCredential, String url) {
 		retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
@@ -97,8 +96,7 @@ public class AuthenticationInterceptor implements Interceptor {
 
 	private void askNewToken() {
 		for (int i = 0; i <= 10; i++) {
-			if (LOG.isInfoEnabled())
-				LOG.info("Asking a new Authentication token, try {}", i);
+			LOG.info("Asking a new Authentication token, try {}", i);
 			try {
 				retrofit2.Response<OAuth2> resp = oauth2Dao.askToken("client_credentials").execute();
 				OAuth2 body = resp.body();
@@ -129,10 +127,6 @@ public class AuthenticationInterceptor implements Interceptor {
 		}
 		// TODO Find a better Exception
 		throw new IllegalStateException("Cannot retrieve a new Authentication Token !");
-	}
-
-	public String getToken() {
-		return token;
 	}
 
 	/**

@@ -69,15 +69,17 @@ public enum Error {
 	SERVER_STATUS_INVALID(206,
 			"Status must be '" + ServerDataOutput.ServerStatus.WAITING + "', '" + ServerDataOutput.ServerStatus.STARTED
 					+ "' or '" + ServerDataOutput.ServerStatus.ENDING + "' !"), //
-	SERVER_STATUS_BEFORE(207, "Invalid status, current is {currentStatus} !"), //
-	SERVER_ACTUALLY_ENDED(208, "This server is already ended !"), //
-	SERVER_TYPE_INVALID(209, "Type must be a string !"), //
-	SERVER_TYPE_LENGTH(210, "Type length must be between 1 and 16 !"), //
-	SERVER_TESTER_INVALID(211, "Invalid id / token / client_id"), //
-	SERVER_SERVER_INVALID(212, "Invalid server !"), //
-	SERVER_SERVER_DOCKER_INVALID(213, "Invalid docker id !"), //
-	SERVER_SERVER_ALREADY_ID(214, "This server is already linked to a docker"), //
-	SERVER_DOCKER_SAVING(215, "Error while saving docker configuration"), //
+	SERVER_STATUS_BEFORE(208, "Invalid status, current is {currentStatus} !"), //
+	SERVER_ACTUALLY_ENDED(209, "This server is already ended !"), //
+	SERVER_TYPE_INVALID(210, "Type must be a string !"), //
+	SERVER_TYPE_LENGTH(211, "Type length must be between 1 and 16 !"), //
+	SERVER_IP_LENGTH(212, "Ip length must be between 1 and 16 !"), //
+	SERVER_TESTER_INVALID(213, "Invalid id or token"), //
+	SERVER_TESTER_UNKNOWN(214, "Unknown error"), //
+	SERVER_SERVER_INVALID(215, "Invalid server !"), //
+	SERVER_SERVER_DOCKER_INVALID(216, "Invalid docker id !"), //
+	SERVER_SERVER_ALREADY_ID(217, "This server is already linked to a docker"), //
+	SERVER_DOCKER_SAVING(218, "Error while saving docker configuration"), //
 
 	INTERNAL_SERVER_JSON(1000, "Internal Server Error: servers.json is not a valid json file !"), //
 	INTERNAL_SERVER_CONFIG(1001, "Internal Server Error: config.ini is not a valid ini file !"), //

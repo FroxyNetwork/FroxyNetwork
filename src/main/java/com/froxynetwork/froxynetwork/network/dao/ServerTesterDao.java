@@ -4,6 +4,7 @@ import com.froxynetwork.froxynetwork.network.output.data.ServerTesterDataOutput;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -35,12 +36,20 @@ import retrofit2.http.Query;
 public interface ServerTesterDao {
 
 	/**
-	 * Test if a server has the permission to connect to the WebSocket
+	 * Test if specific token is linked with specific id
 	 * 
-	 * @param id
-	 *            The id of the server
+	 * @param id    The id of the server to check
+	 * @param token The token
 	 * @return Specific server if exists
 	 */
 	@GET("server/tester/{id}")
-	public Call<ServerTesterDataOutput> checkServer(@Path("id") String id, @Query("client_id") String clientId, @Query("token") String token);
+	public Call<ServerTesterDataOutput> check(@Path("id") String id, @Query("token") String token);
+
+	/**
+	 * Ask a new token
+	 * 
+	 * @return The token
+	 */
+	@POST("server/tester/")
+	public Call<ServerTesterDataOutput> ask();
 }

@@ -1,11 +1,10 @@
-package com.froxynetwork.froxynetwork.network.output.data.server.config;
+package com.froxynetwork.froxynetwork.network.websocket;
 
-import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
-import com.google.gson.annotations.SerializedName;
+import java.net.InetSocketAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.froxynetwork.froxynetwork.network.websocket.auth.WebSocketAuthentication;
 
 /**
  * MIT License
@@ -32,43 +31,18 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOutput.ServersConfig> {
+/**
+ * WebSocket Factory<br />
+ * Be the client or the server !
+ */
+public class WebSocketFactory {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ServersConfig {
-		private ServerConfig[] types;
-		private VpsConfig[] vps;
+	public static WebSocketClientImpl client(URI uri, WebSocketAuthentication webSocketAuthentication)
+			throws URISyntaxException {
+		return new WebSocketClientImpl(uri, webSocketAuthentication);
 	}
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ServerConfig {
-		private String id;
-		private String[] database;
-		private ServerConfig[] variants;
-		private int min;
-		private int max;
-	}
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class VpsConfig {
-		private String id;
-		@SerializedName("max_servers")
-		private int maxServers;
-		private VpsConfigConfig[] config;
-	}
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class VpsConfigConfig {
-		private String type;
-		private int min;
-		private int max;
+	public static WebSocketServer server(InetSocketAddress address, WebSocketAuthentication webSocketAuthentication) {
+		return new WebSocketServer(address, webSocketAuthentication);
 	}
 }

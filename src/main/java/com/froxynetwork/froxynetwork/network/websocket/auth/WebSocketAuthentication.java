@@ -1,9 +1,11 @@
-package com.froxynetwork.froxynetwork.network.websocket;
+package com.froxynetwork.froxynetwork.network.websocket.auth;
+
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
 
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,25 +28,41 @@ package com.froxynetwork.froxynetwork.network.websocket;
  * @author 0ddlyoko
  */
 /**
- * Used to register new commands to execute once a message is received
+ * Used to authenticate WebSocket client with WebSocket Server
  */
-public interface IWebSocketCommander {
+public interface WebSocketAuthentication {
 
 	/**
-	 * @return The name of the command
-	 */
-	public String name();
-
-	/**
-	 * @return The description of the command
-	 */
-	public String description();
-
-	/**
-	 * Action to execute once the message is received
+	 * Initialize this WebSockerAuthentication
 	 * 
-	 * @param message The message
+	 * @param webSocket The WebSocket associated to this Authentication
 	 */
+	public void init(IWebSocket webSocket);
 
-	public void onReceive(String message);
+	/**
+	 * Used to register the authentication listener<br />
+	 * This method is called after {@link #init(IWebSocket)} and will register
+	 * events that will result in a call to {@link #authentificate()}<br />
+	 * Example: Register connection event and call {@linkplain #authentificate()}
+	 */
+	public void registerAuthenticationListener(IWebSocket webSocket);
+
+	/**
+	 * Authentificate this WebSocket
+	 * 
+	 * @param webSocket The WebSocket
+	 */
+	public void authenticate(IWebSocket webSocket);
+
+	/**
+	 * @return true if this WebSocket is authentificated
+	 */
+	public boolean isAuthenticated(IWebSocket webSocket);
+
+	/**
+	 * Called when this WebSocket is stopped and will not be reused
+	 */
+	public default void stop(IWebSocket webSocket) {
+		// Nothing to do
+	}
 }

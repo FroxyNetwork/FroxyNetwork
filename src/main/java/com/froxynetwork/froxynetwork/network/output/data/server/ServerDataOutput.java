@@ -43,12 +43,13 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 		private String id;
 		private String name;
 		private String type;
+		private String vps;
+		private String ip;
 		private int port;
 		private String status;
 		private Date creationTime;
 		private Date endTime;
 		private ServerAuth auth;
-		private ServerDocker docker;
 
 		public ServerStatus getStatus() {
 			switch (status) {
@@ -101,13 +102,5 @@ public class ServerDataOutput extends GeneralDataOutput<ServerDataOutput.Server>
 			sb.append(")");
 			return sb.toString();
 		}
-	}
-
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ServerDocker {
-		private String server;
-		private String id;
 	}
 }

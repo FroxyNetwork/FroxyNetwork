@@ -3,17 +3,19 @@ package com.froxynetwork.froxynetwork.network.dao;
 import com.froxynetwork.froxynetwork.network.output.data.EmptyDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.Server;
-import com.froxynetwork.froxynetwork.network.output.data.server.ServerDataOutput.ServerDocker;
 import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOutput;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * MIT License
@@ -45,8 +47,7 @@ public interface ServerDao {
 	/**
 	 * Get a server from his id
 	 * 
-	 * @param id
-	 *            The id of the server
+	 * @param id The id of the server
 	 * @return Specific server if exists
 	 */
 	@GET("server/{id}")
@@ -55,16 +56,17 @@ public interface ServerDao {
 	/**
 	 * Get all server connected
 	 * 
+	 * @param type The type of server to return
+	 * 
 	 * @return a list of all server connected
 	 */
 	@GET("server")
-	public Call<ServerListDataOutput> getServers();
+	public Call<ServerListDataOutput> getServers(@Query("type") int type);
 
 	/**
 	 * Register a new server to the REST service
 	 * 
-	 * @param server
-	 *            The server
+	 * @param server The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
@@ -74,10 +76,8 @@ public interface ServerDao {
 	/**
 	 * Edit an existing server to the REST service
 	 * 
-	 * @param id
-	 *            The id of the server
-	 * @param server
-	 *            The server
+	 * @param id     The id of the server
+	 * @param server The server
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
@@ -85,22 +85,9 @@ public interface ServerDao {
 	public Call<ServerDataOutput> updateServer(@Path("id") String id, @Body Server server);
 
 	/**
-	 * Set the id of the server containing the docker and the id of the docker
-	 * 
-	 * @param id           The id of the server
-	 * @param serverDocker The id if the server containing the docker and the id of
-	 *                     the docker
-	 * @return Empty response
-	 */
-	@Headers("Content-Type: application/json")
-	@PUT("server/{id}/id")
-	public Call<EmptyDataOutput> updateServerDocker(@Path("id") String id, @Body ServerDocker serverDocker);
-
-	/**
 	 * Delete (close) an existing server to the REST service
 	 * 
-	 * @param id
-	 *            The id of the server
+	 * @param id The id of the server
 	 * @return The response
 	 */
 	@DELETE("server/{id}")

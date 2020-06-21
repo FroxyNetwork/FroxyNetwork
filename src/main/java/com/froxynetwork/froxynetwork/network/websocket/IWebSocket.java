@@ -1,8 +1,11 @@
 package com.froxynetwork.froxynetwork.network.websocket;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.java_websocket.enums.ReadyState;
+
+import com.froxynetwork.froxynetwork.network.websocket.modules.WebSocketModule;
 
 /**
  * MIT License
@@ -29,55 +32,22 @@ import org.java_websocket.enums.ReadyState;
  * 
  * @author 0ddlyoko
  */
+/**
+ * Represent a connection between this client and another client via
+ * WebSocket<br />
+ * This could be the client as well as the server
+ */
 public interface IWebSocket {
 
 	/**
-	 * @return true if the app is connected with the WebSocket server
+	 * @return true if the client is connected
 	 */
 	public boolean isConnected();
 
 	/**
-	 * @return true if the app is connected and authentified
+	 * @return true if the client is connected and authenticated
 	 */
-	public boolean isAuthentified();
-
-	/**
-	 * Interrupt the connection Thread if running
-	 */
-	public default void stopThread() {
-		// Nothing to do here
-	}
-
-	/**
-	 * Connect to the server.<br />
-	 * This method create a new Thread
-	 * 
-	 * @see #registerWebSocketConnection(Consumer)
-	 * 
-	 * @param id
-	 *            The id of the server
-	 * @param clientId
-	 *            The client_id of the server
-	 * @param token
-	 *            The token of the server
-	 */
-	public void connect(String id, String clientId, String token);
-
-	/**
-	 * Disconnect if already connected and reconnect again.<br />
-	 * This method create a new Thread
-	 * 
-	 * @see #registerWebSocketDisconnection(Consumer)
-	 * @see #registerWebSocketConnection(Consumer)
-	 * 
-	 * @param id
-	 *            The id of the server
-	 * @param clientId
-	 *            The client_id of the server
-	 * @param token
-	 *            The token of the server
-	 */
-	public void reconnect(String id, String clientId, String token);
+	public boolean isAuthenticated();
 
 	/**
 	 * Disconnect if already connected
@@ -85,44 +55,69 @@ public interface IWebSocket {
 	public void disconnect();
 
 	/**
-	 * Register an event that is called when the app is connected to the WebSocket
+	 * Disconnect if already connected
 	 * 
-	 * @param run
-	 *            The action to execute. Parameter depends on the first connection
+	 * @param code The disconnection code
+	 */
+	public void disconnect(int code);
+
+	/**
+	 * Disconnect if already connected
+	 * 
+	 * @param code    The disconnection code
+	 * @param message The disconnection message
+	 */
+	public void disconnect(int code, String message);
+
+	/**
+	 * @return true if this WebSocket is the client
+	 */
+	public boolean isClient();
+
+	/**
+	 * Register an event that is called when the client is connected to the
+	 * WebSocket<br />
+	 * This doesn't work if isClient() is false
+	 * 
+	 * @param run The action to execute. Parameter depends on the first connection
 	 *            or on a reconnection. True means it's the first time the app is
 	 *            connected.
 	 */
 	public void registerWebSocketConnection(Consumer<Boolean> run);
 
 	/**
-	 * Unregister the registered event
+	 * Unregister the registered event<br />
+	 * This doesn't work if isClient() is false
 	 * 
 	 * @param run
 	 */
 	public void unregisterWebSocketConnection(Consumer<Boolean> run);
 
 	/**
-	 * Register an event that is called when the app is connected and authentified
+	 * Register an event that is called when the app is connected and authenticated
 	 * to the WebSocket
 	 * 
-	 * @param run
-	 *            The action to execute.
+	 * @param run The action to execute.
 	 */
-	public void registerWebSocketAuthentified(Runnable run);
+	public void registerWebSocketAuthentication(Runnable run);
 
 	/**
 	 * Unregister the registered event
 	 * 
 	 * @param run
 	 */
-	public void unregisterWebSocketAuthentified(Runnable run);
+	public void unregisterWebSocketAuthentication(Runnable run);
 
 	/**
-	 * Register an event that is called when the app is connected and authentified
+	 * Called when this WebSocked is authenticated
+	 */
+	public void onAuthentication();
+
+	/**
+	 * Register an event that is called when the app is connected and authenticated
 	 * to the WebSocket
 	 * 
-	 * @param run
-	 *            The action to execute. Parameter depends on the closing of the
+	 * @param run The action to execute. Parameter depends on the closing of the
 	 *            connection that was initiated or not by the WebSocket server
 	 */
 	public void registerWebSocketDisconnection(Consumer<Boolean> run);
@@ -140,35 +135,70 @@ public interface IWebSocket {
 	public ReadyState getConnectionState();
 
 	/**
-	 * Send a message to specific server
+	 * Send a message via WebSocket and with specific channel
 	 * 
-	 * @param channel
-	 *            The channel
-	 * @param message
-	 *            The message
+	 * @param channel The channel to use
+	 * @param msg     The message
 	 */
-	public void sendChannelMessage(String channel, String message);
-
-	/**
-	 * Remove all listeners for specific channel when incoming message
-	 * 
-	 * @param channel The channel
-	 */
-	public void removeChannelListener(String channel);
+	public void sendCommand(String channel, String msg);
 
 	/**
 	 * Register a new handler for a specific command received via WebSocket
 	 * 
-	 * @param commander 
-	 *            The commander
+	 * @param commander The commander
 	 */
 	public void registerCommand(IWebSocketCommander commander);
 
 	/**
 	 * Unregister a registered command handler
 	 * 
-	 * @param commander
-	 *            The commander
+	 * @param commander The commander
 	 */
 	public void unregisterCommand(IWebSocketCommander commander);
+
+	/**
+	 * Called when this WebSocket got a command
+	 * 
+	 * @param channel The channel
+	 * @param msg     The message
+	 */
+	public void onCommand(String channel, String msg);
+
+	/**
+	 * Save an object to this WebSocket
+	 * 
+	 * @param key The key
+	 * @param obj The object
+	 */
+	public void save(String key, Object obj);
+
+	/**
+	 * @param key The key
+	 * @return The object associated with this key
+	 */
+	public Object get(String key);
+
+	/**
+	 * Add specific module
+	 * 
+	 * @param module The module
+	 */
+	public void addModule(WebSocketModule module);
+
+	/**
+	 * Remove specific module
+	 * 
+	 * @param module The module
+	 */
+	public void removeModule(WebSocketModule module);
+
+	/**
+	 * @return All modules
+	 */
+	public List<WebSocketModule> getModules();
+
+	/**
+	 * Disconnect this webSocket and unload modules
+	 */
+	public void closeAll();
 }

@@ -1,5 +1,7 @@
 package com.froxynetwork.froxynetwork.network.output.data;
 
+import java.util.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,8 +43,8 @@ public class PlayerDataOutput extends GeneralDataOutput<PlayerDataOutput.Player>
 		private int coins;
 		private int level;
 		private int exp;
-		private String firstLogin;
-		private String lastLogin;
+		private Date firstLogin;
+		private Date lastLogin;
 		private String ip;
 		private String lang;
 		private Server server;

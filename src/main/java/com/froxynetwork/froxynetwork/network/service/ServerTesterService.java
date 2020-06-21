@@ -47,17 +47,33 @@ public class ServerTesterService {
 		serverTesterDao = retrofit.create(ServerTesterDao.class);
 	}
 
-	public void asyncCheckServer(String id, String clientId, String token, Callback<ServerTester> callback) {
+	public void asyncCheck(String id, String token, Callback<ServerTester> callback) {
 		if (LOG.isDebugEnabled())
-			LOG.debug("asyncCheckServer: Checking server {}", id);
-		serverTesterDao.checkServer(id, clientId, token)
-				.enqueue(ServiceHelper.callback(callback, ServerTesterDataOutput.class));
+			LOG.debug("asyncCheck: Checking {}", id);
+		serverTesterDao.check(id, token).enqueue(ServiceHelper.callback(callback, ServerTesterDataOutput.class));
 	}
 
-	public ServerTester syncCheckServer(String id, String clientId, String token) throws RestException, Exception {
+	public ServerTester syncCheck(String id, String token) throws RestException, Exception {
 		if (LOG.isDebugEnabled())
-			LOG.debug("syncCheckServer: Checking server {}", id);
-		Response<ServerTesterDataOutput> response = serverTesterDao.checkServer(id, clientId, token).execute();
+			LOG.debug("syncCheckServer: Checking {}", id);
+		Response<ServerTesterDataOutput> response = serverTesterDao.check(id, token).execute();
+		ServerTesterDataOutput body = ServiceHelper.response(response, ServerTesterDataOutput.class);
+		if (body.isError())
+			throw new RestException(body);
+		else
+			return body.getData();
+	}
+
+	public void asyncAsk(Callback<ServerTester> callback) {
+		if (LOG.isDebugEnabled())
+			LOG.debug("asyncAsk: Asking token");
+		serverTesterDao.ask().enqueue(ServiceHelper.callback(callback, ServerTesterDataOutput.class));
+	}
+
+	public ServerTester syncAsk() throws RestException, Exception {
+		if (LOG.isDebugEnabled())
+			LOG.debug("syncAsk: Asking token");
+		Response<ServerTesterDataOutput> response = serverTesterDao.ask().execute();
 		ServerTesterDataOutput body = ServiceHelper.response(response, ServerTesterDataOutput.class);
 		if (body.isError())
 			throw new RestException(body);

@@ -1,16 +1,11 @@
-package com.froxynetwork.froxynetwork.network.output.data.server.config;
+package com.froxynetwork.froxynetwork.network.websocket.modules;
 
-import com.froxynetwork.froxynetwork.network.output.data.GeneralDataOutput;
-import com.google.gson.annotations.SerializedName;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
 
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,43 +27,27 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class ServerConfigDataOutput extends GeneralDataOutput<ServerConfigDataOutput.ServersConfig> {
+public interface WebSocketModule {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ServersConfig {
-		private ServerConfig[] types;
-		private VpsConfig[] vps;
-	}
+	/**
+	 * @return The name of this module
+	 */
+	public String getName();
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class ServerConfig {
-		private String id;
-		private String[] database;
-		private ServerConfig[] variants;
-		private int min;
-		private int max;
-	}
+	/**
+	 * Initialize this module
+	 * 
+	 * @param webSocket The WebSocket associated to this Authentication
+	 */
+	public void init(IWebSocket webSocket);
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class VpsConfig {
-		private String id;
-		@SerializedName("max_servers")
-		private int maxServers;
-		private VpsConfigConfig[] config;
-	}
+	/**
+	 * Load this module
+	 */
+	public void load();
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class VpsConfigConfig {
-		private String type;
-		private int min;
-		private int max;
-	}
+	/**
+	 * Unload this module
+	 */
+	public void unload();
 }
