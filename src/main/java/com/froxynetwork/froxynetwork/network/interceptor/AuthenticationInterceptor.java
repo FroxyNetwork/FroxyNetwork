@@ -64,6 +64,7 @@ public class AuthenticationInterceptor implements Interceptor {
 	/**
 	 * @param clientCredential The clientCredential, provided by
 	 *                         {@link Credentials#basic(String, String)}
+	 * @param url              The url of the rest server
 	 */
 	public AuthenticationInterceptor(String clientCredential, String url) {
 		retrofit = new Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
@@ -100,16 +101,16 @@ public class AuthenticationInterceptor implements Interceptor {
 			try {
 				retrofit2.Response<OAuth2> resp = oauth2Dao.askToken("client_credentials").execute();
 				OAuth2 body = resp.body();
-				if (body == null || body.getAccess_token() == null
-						|| "".equalsIgnoreCase(body.getAccess_token().trim())) {
+				if (body == null || body.getAccessToken() == null
+						|| "".equalsIgnoreCase(body.getAccessToken().trim())) {
 					if (LOG.isWarnEnabled()) {
 						LOG.warn("Error while getting a new Authentication token, error {}, try {}", resp.code(), i);
 						LOG.warn("Got response {}", resp.errorBody().string());
 					}
 					continue;
 				}
-				token = body.getAccess_token();
-				int time = body.getExpires_in();
+				token = body.getAccessToken();
+				int time = body.getExpiresIn();
 				int marge = (time * 3) / 4;
 				GregorianCalendar cal = new GregorianCalendar();
 				// 3 / 4 of time

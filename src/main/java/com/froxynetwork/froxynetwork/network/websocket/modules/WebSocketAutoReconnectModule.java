@@ -67,6 +67,10 @@ public class WebSocketAutoReconnectModule implements WebSocketModule {
 		});
 		thread.start();
 	}
+	
+	public boolean hasThread() {
+		return thread != null;
+	}
 
 	@Override
 	public void unload() {

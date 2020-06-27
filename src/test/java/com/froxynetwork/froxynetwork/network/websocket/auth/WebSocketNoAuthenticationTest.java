@@ -1,15 +1,19 @@
-package com.froxynetwork.froxynetwork.network.output.data;
+package com.froxynetwork.froxynetwork.network.websocket.auth;
 
-import com.google.gson.annotations.SerializedName;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import com.froxynetwork.froxynetwork.network.websocket.IWebSocket;
 
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,18 +35,22 @@ import lombok.NoArgsConstructor;
  * 
  * @author 0ddlyoko
  */
-public class OAuth2DataOutput {
+@RunWith(MockitoJUnitRunner.class)
+public class WebSocketNoAuthenticationTest {
 
-	@Data
-	@NoArgsConstructor
-	@AllArgsConstructor
-	public static class OAuth2 {
-		@SerializedName("access_token")
-		private String accessToken;
-		@SerializedName("expires_in")
-		private int expiresIn;
-		@SerializedName("token_type")
-		private String tokenType;
-		private String scope;
+	@Test
+	public void testIsAuthenticated() {
+		WebSocketAuthentication auth = new WebSocketNoAuthentication();
+		// Should always be true
+		assertTrue(auth.isAuthenticated(null));
+	}
+
+	@Test
+	public void testRegisterAuthenticationListener() {
+		IWebSocket ws = Mockito.mock(IWebSocket.class);
+		WebSocketAuthentication auth = new WebSocketNoAuthentication();
+		auth.registerAuthenticationListener(ws);
+		// Test if this method has been invoked
+		verify(ws).onAuthentication();
 	}
 }
