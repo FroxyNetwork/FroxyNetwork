@@ -3,7 +3,7 @@ package com.froxynetwork.froxynetwork.network.output;
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,8 +30,7 @@ public interface Callback<T> {
 	 * Called when a response is returned by the REST server and his response is
 	 * positive (no errors)
 	 * 
-	 * @param response
-	 *            The response
+	 * @param response The response
 	 */
 	public void onResponse(T response);
 
@@ -39,16 +38,14 @@ public interface Callback<T> {
 	 * Called when a response is returned by the REST server and his response is
 	 * negative (error)
 	 * 
-	 * @param ex
-	 *            The error
+	 * @param ex The error
 	 */
 	public void onFailure(RestException ex);
 
 	/**
 	 * Called when there is an error while sending the request to the REST server
 	 * 
-	 * @param t
-	 *            The error
+	 * @param t The error
 	 */
 	public void onFatalFailure(Throwable t);
 }

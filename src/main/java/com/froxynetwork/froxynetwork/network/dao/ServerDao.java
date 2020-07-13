@@ -8,8 +8,6 @@ import com.froxynetwork.froxynetwork.network.output.data.server.ServerListDataOu
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -20,7 +18,7 @@ import retrofit2.http.Query;
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

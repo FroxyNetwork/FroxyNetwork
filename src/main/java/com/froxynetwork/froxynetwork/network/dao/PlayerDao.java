@@ -14,7 +14,7 @@ import retrofit2.http.Path;
 /**
  * MIT License
  *
- * Copyright (c) 2019 FroxyNetwork
+ * Copyright (c) 2020 FroxyNetwork
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,8 +41,7 @@ public interface PlayerDao {
 	/**
 	 * Get a player from his UUID or his name
 	 * 
-	 * @param uuid
-	 *            The uuid of the player, or his name
+	 * @param uuid The uuid of the player, or his name
 	 * @return Specific player if exists
 	 */
 	@GET("player/{uuid}")
@@ -51,8 +50,7 @@ public interface PlayerDao {
 	/**
 	 * Register a new player to the REST service
 	 * 
-	 * @param player
-	 *            The player
+	 * @param player The player
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
@@ -62,10 +60,8 @@ public interface PlayerDao {
 	/**
 	 * Edit an existing player to the REST service
 	 * 
-	 * @param uuid
-	 *            The UUID of the player
-	 * @param player
-	 *            The player
+	 * @param uuid   The UUID of the player
+	 * @param player The player
 	 * @return The response
 	 */
 	@Headers("Content-Type: application/json")
