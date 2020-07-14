@@ -1,11 +1,21 @@
 package com.froxynetwork.froxynetwork.network;
 
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.froxynetwork.froxynetwork.network.interceptor.AuthenticationInterceptor;
 import com.froxynetwork.froxynetwork.network.service.ServiceManager;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
@@ -50,8 +60,8 @@ public final class NetworkManager {
 						url))
 				.build();
 		retrofit = new Retrofit.Builder()
-				.addConverterFactory(
-						GsonConverterFactory.create(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create()))
+				.addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
+						.registerTypeAdapter(Date.class, new UTCDateDeserializer("yyyy-MM-dd HH:mm:ss")).create()))
 				.client(okHttpClient).baseUrl(url).build();
 		serviceManager = new ServiceManager(retrofit);
 	}
@@ -75,5 +85,28 @@ public final class NetworkManager {
 
 	public boolean isTokenExpired() {
 		return authenticationInterceptor.isTokenExpired();
+	}
+
+	// TODO Test
+	private class UTCDateDeserializer implements JsonDeserializer<Date> {
+		private String format;
+
+		public UTCDateDeserializer(String format) {
+			this.format = format;
+		}
+
+		@Override
+		public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			String date = json.getAsString();
+			SimpleDateFormat formatter = new SimpleDateFormat(format);
+			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+			try {
+				return formatter.parse(date);
+			} catch (ParseException e) {
+				return null;
+			}
+		}
 	}
 }
